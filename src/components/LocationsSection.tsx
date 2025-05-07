@@ -21,10 +21,136 @@ const locations = [
     image: "/images/kisumu.jpg"
   },
   {
+    id: "karen",
+    name: "Karen",
+    properties: 36,
+    image: "/images/karen.jpg"
+  },
+  {
+    id: "runda",
+    name: "Runda",
+    properties: 31,
+    image: "/images/runda.jpg"
+  },
+  {
+    id: "muthaiga",
+    name: "Muthaiga",
+    properties: 28,
+    image: "/images/muthaiga.jpg"
+  },
+  {
+    id: "lavington",
+    name: "Lavington",
+    properties: 34,
+    image: "/images/lavington.jpg"
+  },
+  {
+    id: "kileleshwa",
+    name: "Kileleshwa",
+    properties: 29,
+    image: "/images/kileleshwa.jpg"
+  },
+  {
+    id: "westlands",
+    name: "Westlands",
+    properties: 40,
+    image: "/images/westlands.jpg"
+  },
+  {
+    id: "kilimani",
+    name: "Kilimani",
+    properties: 38,
+    image: "/images/kilimani.jpg"
+  },
+  {
+    id: "gigiri",
+    name: "Gigiri",
+    properties: 22,
+    image: "/images/gigiri.jpg"
+  },
+  {
+    id: "rosslyn",
+    name: "Rosslyn",
+    properties: 18,
+    image: "/images/rosslyn.jpg"
+  },
+  {
+    id: "kitisuru",
+    name: "Kitisuru",
+    properties: 25,
+    image: "/images/kitisuru.jpg"
+  },
+  {
+    id: "nyari",
+    name: "Nyari Estate",
+    properties: 16,
+    image: "/images/nyari.jpg"
+  },
+  {
+    id: "thigiri",
+    name: "Thigiri",
+    properties: 14,
+    image: "/images/thigiri.jpg"
+  },
+  {
+    id: "upperhill",
+    name: "Upper Hill",
+    properties: 30,
+    image: "/images/upperhill.jpg"
+  },
+  {
+    id: "riverside",
+    name: "Riverside Drive",
+    properties: 26,
+    image: "/images/riverside.jpg"
+  },
+  {
+    id: "nyali",
+    name: "Nyali",
+    properties: 32,
+    image: "/images/nyali.jpg"
+  },
+  {
+    id: "vipingo",
+    name: "Vipingo Ridge",
+    properties: 20,
+    image: "/images/vipingo.jpg"
+  },
+  {
+    id: "diani",
+    name: "Diani Beach",
+    properties: 24,
+    image: "/images/diani.jpg"
+  },
+  {
+    id: "kilifi",
+    name: "Kilifi",
+    properties: 18,
+    image: "/images/kilifi.jpg"
+  },
+  {
+    id: "malindi",
+    name: "Malindi",
+    properties: 22,
+    image: "/images/malindi.jpg"
+  },
+  {
     id: "naivasha",
     name: "Naivasha",
     properties: 28,
     image: "/images/naivasha.jpg"
+  },
+  {
+    id: "nanyuki",
+    name: "Nanyuki",
+    properties: 17,
+    image: "/images/nanyuki.jpg"
+  },
+  {
+    id: "elementaita",
+    name: "Elementaita",
+    properties: 12,
+    image: "/images/elementaita.jpg"
   }
 ];
 
