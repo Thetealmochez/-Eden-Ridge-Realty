@@ -4,9 +4,9 @@ import { useState } from "react";
 
 const WhatsAppButton = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const phoneNumber = "+254700123456";
+  const phoneNumber = "+254791942327";
   
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=Hello%20Evans,%20I'm%20interested%20in%20learning%20more%20about%20your%20luxury%20properties%20in%20Kenya.`;
+  const whatsappUrl = `https://wa.me/${phoneNumber}?text=Hello,%20I'm%20interested%20in%20learning%20more%20about%20your%20luxury%20properties%20in%20Kenya.`;
   
   return (
     <>
