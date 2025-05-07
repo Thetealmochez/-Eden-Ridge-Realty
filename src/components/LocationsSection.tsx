@@ -1,5 +1,6 @@
 
 import { ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const locations = [
   {
@@ -184,13 +185,13 @@ const LocationsSection = () => {
                 <h3 className="text-xl font-semibold text-white mb-1">{location.name}</h3>
                 <p className="text-white/80 text-sm mb-4">{location.properties} Properties</p>
                 
-                <a 
-                  href={`/locations/${location.id}`} 
+                <Link 
+                  to={`/locations/${location.id}`}
                   className="inline-flex items-center text-white text-sm luxury-transition hover:text-luxury-gold"
                 >
                   View Properties
                   <ArrowRight className="ml-2 h-4 w-4" />
-                </a>
+                </Link>
               </div>
             </div>
           ))}
