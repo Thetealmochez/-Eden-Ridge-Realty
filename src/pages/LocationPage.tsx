@@ -114,11 +114,18 @@ const LocationPage = () => {
   // Get properties for this location or an empty array if none exists
   const locationProperties = (locationId && mockProperties[locationId as keyof typeof mockProperties]) || [];
 
+  // Dynamic background image URL based on locationId
+  const backgroundImageStyle = {
+    backgroundImage: `url('/images/${locationId}.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center'
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main>
-        <div className="relative h-64 md:h-96 w-full bg-[url('/images/" + locationId + ".jpg')] bg-cover bg-center">
+        <div className="relative h-64 md:h-96 w-full" style={backgroundImageStyle}>
           <div className="absolute inset-0 bg-gradient-to-b from-luxury-navy/70 to-luxury-navy/50 flex items-center justify-center">
             <h1 className="text-4xl md:text-5xl font-semibold text-white">
               {locationName}
