@@ -7,6 +7,7 @@ import PropertyCard from "@/components/PropertyCard";
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 // Mock data for properties in each location
 const mockProperties = {
@@ -107,19 +108,50 @@ const locationNames: Record<string, string> = {
 const LocationPage = () => {
   const { locationId } = useParams<{ locationId: string }>();
   const navigate = useNavigate();
+  const [imageError, setImageError] = useState(false);
   
-  // Get the location name from the ID
-  const locationName = locationId ? locationNames[locationId] || locationId : "Unknown Location";
+  // Get the location name from the ID, with fallback for unknown locations
+  const locationName = locationId 
+    ? locationNames[locationId] || locationId.charAt(0).toUpperCase() + locationId.slice(1)
+    : "Unknown Location";
   
   // Get properties for this location or an empty array if none exists
   const locationProperties = (locationId && mockProperties[locationId as keyof typeof mockProperties]) || [];
 
-  // Dynamic background image URL based on locationId
+  // Validate that the location exists in our records
+  useEffect(() => {
+    if (locationId && !Object.keys(locationNames).includes(locationId)) {
+      // Log for monitoring but don't redirect - we'll show a generic page
+      console.log(`Warning: Unknown location ID accessed: ${locationId}`);
+    }
+  }, [locationId]);
+
+  // Default fallback background image
+  const fallbackImage = '/images/placeholder.svg';
+
+  // Dynamic background image URL based on locationId with error handling
   const backgroundImageStyle = {
-    backgroundImage: `url('/images/${locationId}.jpg')`,
+    backgroundImage: imageError || !locationId 
+      ? `url('${fallbackImage}')`
+      : `url('/images/${locationId}.jpg')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center'
   };
+
+  // Image error handler for background
+  const handleImageError = () => {
+    setImageError(true);
+    console.log(`Image for location ${locationId} could not be loaded.`);
+  };
+
+  // Preload the image to detect loading errors
+  useEffect(() => {
+    if (locationId) {
+      const img = new Image();
+      img.src = `/images/${locationId}.jpg`;
+      img.onerror = handleImageError;
+    }
+  }, [locationId]);
 
   return (
     <div className="min-h-screen flex flex-col">
