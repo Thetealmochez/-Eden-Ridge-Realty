@@ -1,7 +1,8 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Bed, Bath, Home, MapPin, ArrowRight } from 'lucide-react';
+import { Bed, Bath, Home, MapPin, ArrowRight, Info } from 'lucide-react';
+import { useState } from 'react';
 
 export interface PropertyCardProps {
   id: string;
@@ -14,6 +15,7 @@ export interface PropertyCardProps {
   image: string;
   featured?: boolean;
   propertyType: 'Residential' | 'Commercial';
+  description?: string;
 }
 
 const PropertyCard = ({
@@ -26,8 +28,11 @@ const PropertyCard = ({
   area,
   image,
   featured = false,
-  propertyType
+  propertyType,
+  description
 }: PropertyCardProps) => {
+  const [showDescription, setShowDescription] = useState(false);
+
   return (
     <Card className="overflow-hidden border-0 shadow-lg luxury-transition hover:shadow-xl group">
       <div className="relative">
@@ -36,6 +41,10 @@ const PropertyCard = ({
             src={image}
             alt={title}
             className="w-full h-full object-cover luxury-transition group-hover:scale-105"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              (e.target as HTMLImageElement).src = '/images/placeholder.svg';
+            }}
           />
         </div>
         
@@ -64,6 +73,12 @@ const PropertyCard = ({
           {price}
         </p>
         
+        {description && showDescription && (
+          <div className="mb-4 p-3 bg-luxury-cream/30 rounded-md text-sm text-luxury-slate">
+            <p>{description}</p>
+          </div>
+        )}
+        
         <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
           <div className="flex space-x-4">
             {bedrooms > 0 && (
@@ -86,13 +101,24 @@ const PropertyCard = ({
             </div>
           </div>
           
-          <a 
-            href={`/property/${id}`} 
-            className="text-luxury-navy luxury-transition hover:text-luxury-gold flex items-center text-sm font-medium"
-          >
-            Details 
-            <ArrowRight className="h-4 w-4 ml-1" />
-          </a>
+          <div className="flex items-center space-x-2">
+            {description && (
+              <button
+                onClick={() => setShowDescription(prev => !prev)}
+                className="p-1 rounded-full bg-luxury-navy/10 text-luxury-navy hover:bg-luxury-navy/20 transition-colors"
+                title={showDescription ? "Hide details" : "Show details"}
+              >
+                <Info className="h-4 w-4" />
+              </button>
+            )}
+            <a 
+              href={`/property/${id}`} 
+              className="text-luxury-navy luxury-transition hover:text-luxury-gold flex items-center text-sm font-medium"
+            >
+              Details 
+              <ArrowRight className="h-4 w-4 ml-1" />
+            </a>
+          </div>
         </div>
       </CardContent>
     </Card>

@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,30 +8,44 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
-// Mock data for properties in each location
+// Enhanced mock data for properties in each location with detailed information
 const mockProperties = {
   nairobi: [
     {
       id: "prop1",
       title: "Luxury Villa with Pool",
       price: "KES 45,000,000",
-      location: "Nairobi",
+      location: "Karen, Nairobi",
       bedrooms: 5,
       bathrooms: 4,
       area: 450,
-      image: "/images/nairobi.jpg",
-      propertyType: "Residential" as const
+      image: "/images/nairobi-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "This exclusive 5-bedroom villa features a private swimming pool, landscaped gardens, and modern interiors with high-end finishes. The property includes a home office, staff quarters, and state-of-the-art security systems."
     },
     {
       id: "prop2",
       title: "Modern Apartment",
       price: "KES 25,000,000",
-      location: "Nairobi",
+      location: "Westlands, Nairobi",
       bedrooms: 3,
       bathrooms: 2,
       area: 210,
-      image: "/images/nairobi.jpg",
-      propertyType: "Residential" as const
+      image: "/images/nairobi-property2.jpg",
+      propertyType: "Residential" as const,
+      description: "Located in the heart of Westlands, this contemporary apartment offers panoramic city views, open-plan living spaces, and premium amenities including a gym, rooftop pool, and 24-hour concierge service."
+    },
+    {
+      id: "prop7",
+      title: "Penthouse with City Views",
+      price: "KES 38,000,000",
+      location: "Kilimani, Nairobi",
+      bedrooms: 4,
+      bathrooms: 3.5,
+      area: 320,
+      image: "/images/nairobi-property3.jpg",
+      propertyType: "Residential" as const,
+      description: "Spectacular penthouse featuring floor-to-ceiling windows with breathtaking views of Nairobi's skyline. Includes a chef's kitchen, home automation system, entertainment terrace, and two secure parking spaces."
     }
   ],
   mombasa: [
@@ -40,12 +53,25 @@ const mockProperties = {
       id: "prop3",
       title: "Beachfront Property",
       price: "KES 65,000,000",
-      location: "Mombasa",
+      location: "Nyali, Mombasa",
       bedrooms: 4,
       bathrooms: 4,
       area: 380,
-      image: "/images/mombasa.jpg",
-      propertyType: "Residential" as const
+      image: "/images/mombasa-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Direct beach access from this stunning oceanfront home. Features include an infinity pool overlooking the Indian Ocean, spacious verandas, tropical gardens, and a private beach area. Perfect for luxury living or as a vacation retreat."
+    },
+    {
+      id: "prop8",
+      title: "Resort-Style Villa",
+      price: "KES 85,000,000",
+      location: "Diani Beach, Mombasa",
+      bedrooms: 6,
+      bathrooms: 6.5,
+      area: 520,
+      image: "/images/mombasa-property2.jpg",
+      propertyType: "Residential" as const,
+      description: "Luxurious villa set in lush tropical gardens with a large swimming pool and outdoor entertainment areas. Features include Swahili-inspired architecture, a fully equipped modern kitchen, and staff quarters. Just minutes from Diani's white sandy beaches."
     }
   ],
   karen: [
@@ -57,8 +83,21 @@ const mockProperties = {
       bedrooms: 6,
       bathrooms: 6,
       area: 800,
-      image: "/images/karen.jpg",
-      propertyType: "Residential" as const
+      image: "/images/karen-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Set on 1.5 acres of prime Karen land, this magnificent estate home offers unparalleled luxury with a tennis court, stable facilities, and manicured English gardens. The main house features high ceilings, hardwood floors, and a gourmet kitchen."
+    },
+    {
+      id: "prop9",
+      title: "Colonial-Style Manor",
+      price: "KES 98,000,000",
+      location: "Karen, Nairobi",
+      bedrooms: 5,
+      bathrooms: 4.5,
+      area: 650,
+      image: "/images/karen-property2.jpg",
+      propertyType: "Residential" as const,
+      description: "Classic colonial residence with modern amenities, surrounded by mature trees on a half-acre plot. Features include a library, wine cellar, heated pool, and guest cottage. Located near Karen Country Club."
     }
   ],
   runda: [
@@ -70,8 +109,91 @@ const mockProperties = {
       bedrooms: 7,
       bathrooms: 8,
       area: 1200,
-      image: "/images/runda.jpg",
-      propertyType: "Residential" as const
+      image: "/images/runda-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Architectural masterpiece in Runda featuring double-height ceilings, a grand staircase, and extensive use of marble and granite. Amenities include a home theater, indoor pool, sauna, and smart home technology throughout."
+    },
+    {
+      id: "prop10",
+      title: "Modern Family Home",
+      price: "KES 85,000,000",
+      location: "Runda, Nairobi",
+      bedrooms: 5,
+      bathrooms: 5,
+      area: 750,
+      image: "/images/runda-property2.jpg",
+      propertyType: "Residential" as const,
+      description: "Contemporary family residence with open concept interiors, floor-to-ceiling windows, and a seamless indoor-outdoor living experience. Features include a children's play area, home gym, and outdoor kitchen."
+    }
+  ],
+  muthaiga: [
+    {
+      id: "prop11",
+      title: "Historic Muthaiga Estate",
+      price: "KES 180,000,000",
+      location: "Muthaiga, Nairobi",
+      bedrooms: 6,
+      bathrooms: 7,
+      area: 950,
+      image: "/images/muthaiga-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Prestigious estate in Nairobi's most exclusive neighborhood. This colonial-era property has been meticulously restored with modern amenities while preserving its historical charm. Set on 2 acres with mature gardens."
+    }
+  ],
+  lavington: [
+    {
+      id: "prop12",
+      title: "Lavington Garden Home",
+      price: "KES 75,000,000",
+      location: "Lavington, Nairobi",
+      bedrooms: 4,
+      bathrooms: 4.5,
+      area: 450,
+      image: "/images/lavington-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Elegant family home in a secure gated community featuring tropical gardens, a swimming pool, and spacious entertainment areas. The property includes staff quarters and a home office/study."
+    }
+  ],
+  kileleshwa: [
+    {
+      id: "prop13",
+      title: "Riverside Residence",
+      price: "KES 68,000,000",
+      location: "Kileleshwa, Nairobi",
+      bedrooms: 4,
+      bathrooms: 3.5,
+      area: 350,
+      image: "/images/kileleshwa-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Luxury townhouse with serene views of Kileleshwa's green spaces. Features include a rooftop terrace, vertical garden, and intelligent home systems. Located in a secure compound with shared amenities."
+    }
+  ],
+  westlands: [
+    {
+      id: "prop14",
+      title: "Corporate Headquarters",
+      price: "KES 220,000,000",
+      location: "Westlands, Nairobi",
+      bedrooms: 0,
+      bathrooms: 8,
+      area: 2500,
+      image: "/images/westlands-property1.jpg",
+      propertyType: "Commercial" as const,
+      description: "Prime commercial property in Westlands' business district. Modern office building with multiple floors, underground parking, high-speed elevators, and energy-efficient systems. Excellent investment opportunity."
+    }
+  ],
+  kilimani: [
+    {
+      id: "prop15",
+      title: "Kilimani Apartment Complex",
+      price: "KES 150,000,000",
+      location: "Kilimani, Nairobi",
+      bedrooms: 12,
+      bathrooms: 14,
+      area: 1200,
+      image: "/images/kilimani-property1.jpg",
+      propertyType: "Residential" as const,
+      description: "Investment opportunity: residential apartment building with 6 two-bedroom units. Fully occupied with consistent rental income. Includes secure parking, backup power, and water storage systems."
     }
   ]
 };

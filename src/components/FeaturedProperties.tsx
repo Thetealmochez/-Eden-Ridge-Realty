@@ -4,7 +4,7 @@ import PropertyCard, { PropertyCardProps } from './PropertyCard';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 
-// Sample property data
+// Enhanced property data with detailed descriptions
 const properties: PropertyCardProps[] = [
   {
     id: "1",
@@ -16,7 +16,8 @@ const properties: PropertyCardProps[] = [
     area: 450,
     image: "/images/property1.jpg",
     featured: true,
-    propertyType: "Residential"
+    propertyType: "Residential",
+    description: "This magnificent villa features a private swimming pool, landscaped gardens, spacious living areas, and high-end finishes throughout. Located in the exclusive Karen suburb with 24/7 security."
   },
   {
     id: "2",
@@ -28,7 +29,8 @@ const properties: PropertyCardProps[] = [
     area: 250,
     image: "/images/property2.jpg",
     featured: true,
-    propertyType: "Residential"
+    propertyType: "Residential",
+    description: "Exclusive penthouse offering breathtaking views of Nairobi's skyline. Features include floor-to-ceiling windows, designer kitchen, private elevator access, and a rooftop terrace."
   },
   {
     id: "3",
@@ -40,7 +42,8 @@ const properties: PropertyCardProps[] = [
     area: 1200,
     image: "/images/property3.jpg",
     featured: true,
-    propertyType: "Commercial"
+    propertyType: "Commercial",
+    description: "State-of-the-art office building in Nairobi's business district. Includes multiple conference rooms, high-speed internet infrastructure, secure parking, and energy-efficient design."
   },
   {
     id: "4",
@@ -51,7 +54,8 @@ const properties: PropertyCardProps[] = [
     bathrooms: 4.5,
     area: 350,
     image: "/images/property4.jpg",
-    propertyType: "Residential"
+    propertyType: "Residential",
+    description: "Luxury beachfront property with direct access to Diani's pristine white sands. Features an infinity pool overlooking the Indian Ocean, tropical gardens, and spacious outdoor entertainment areas."
   },
   {
     id: "5",
@@ -62,7 +66,8 @@ const properties: PropertyCardProps[] = [
     bathrooms: 2,
     area: 300,
     image: "/images/property5.jpg",
-    propertyType: "Commercial"
+    propertyType: "Commercial",
+    description: "Prime retail space in high-traffic area of Nairobi's Central Business District. Perfect for flagship stores or restaurant concepts with excellent visibility and foot traffic."
   },
   {
     id: "6",
@@ -73,7 +78,8 @@ const properties: PropertyCardProps[] = [
     bathrooms: 3,
     area: 320,
     image: "/images/property6.jpg",
-    propertyType: "Residential"
+    propertyType: "Residential",
+    description: "Serene lake view property in Naivasha featuring a boat dock, landscaped grounds, and comfortable living spaces. Perfect as a vacation home or permanent residence away from the city."
   }
 ];
 
