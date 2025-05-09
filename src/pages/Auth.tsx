@@ -1,18 +1,18 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
-import { useEffect } from 'react';
 
 const Auth = () => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
   
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
@@ -26,18 +26,34 @@ const Auth = () => {
   
   const [loading, setLoading] = useState(false);
   
+  // Parse redirect URL from query params
+  const searchParams = new URLSearchParams(location.search);
+  const redirectTo = searchParams.get('redirect') || '/';
+  
   // Check if user is already logged in
   useEffect(() => {
     const checkUser = async () => {
       const { data } = await supabase.auth.getSession();
       if (data.session) {
-        // Redirect to home if already logged in
-        navigate('/');
+        // Redirect to intended destination if already logged in
+        navigate(redirectTo);
       }
     };
     
     checkUser();
-  }, [navigate]);
+  }, [navigate, redirectTo]);
+
+  const validatePassword = (password: string): { valid: boolean, message?: string } => {
+    if (password.length < 8) {
+      return { 
+        valid: false, 
+        message: "Password must be at least 8 characters long."
+      };
+    }
+    
+    // Add more password validation rules as needed
+    return { valid: true };
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +84,7 @@ const Auth = () => {
           title: "Login Successful",
           description: "Welcome back!",
         });
-        navigate('/');
+        navigate(redirectTo);
       }
     } catch (error: any) {
       toast({
@@ -104,10 +120,11 @@ const Auth = () => {
     }
     
     // Check password strength
-    if (registerPassword.length < 8) {
+    const passwordCheck = validatePassword(registerPassword);
+    if (!passwordCheck.valid) {
       toast({
         title: "Weak Password",
-        description: "Password must be at least 8 characters long.",
+        description: passwordCheck.message,
         variant: "destructive",
       });
       return;
@@ -131,17 +148,12 @@ const Auth = () => {
       if (data.user) {
         toast({
           title: "Registration Successful",
-          description: "Please check your email for verification.",
+          description: data.session ? "You are now logged in." : "Please check your email for verification.",
         });
         
-        // Automatically sign in the user
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: registerEmail,
-          password: registerPassword,
-        });
-        
-        if (!signInError) {
-          navigate('/');
+        // If session exists, user is automatically signed in
+        if (data.session) {
+          navigate(redirectTo);
         }
       }
     } catch (error: any) {
@@ -155,11 +167,16 @@ const Auth = () => {
     }
   };
 
+  // Function to sanitize input
+  const sanitizeInput = (input: string): string => {
+    return input.trim();
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-luxury-navy">Evans Kenya Homes</h1>
+          <h1 className="text-3xl font-bold text-luxury-navy">Eden Ridge Realty</h1>
           <p className="mt-2 text-sm text-luxury-slate">Secure access to your luxury real estate platform</p>
         </div>
         
@@ -183,8 +200,9 @@ const Auth = () => {
                     type="email"
                     placeholder="you@example.com"
                     value={loginEmail}
-                    onChange={(e) => setLoginEmail(e.target.value)}
+                    onChange={(e) => setLoginEmail(sanitizeInput(e.target.value))}
                     required
+                    autoComplete="email"
                   />
                 </div>
                 
@@ -203,11 +221,13 @@ const Auth = () => {
                       value={loginPassword}
                       onChange={(e) => setLoginPassword(e.target.value)}
                       required
+                      autoComplete="current-password"
                     />
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowLoginPassword(!showLoginPassword)}
+                      aria-label={showLoginPassword ? "Hide password" : "Show password"}
                     >
                       {showLoginPassword ? (
                         <EyeOff className="h-4 w-4 text-luxury-slate" />
@@ -244,8 +264,9 @@ const Auth = () => {
                     type="email"
                     placeholder="you@example.com"
                     value={registerEmail}
-                    onChange={(e) => setRegisterEmail(e.target.value)}
+                    onChange={(e) => setRegisterEmail(sanitizeInput(e.target.value))}
                     required
+                    autoComplete="email"
                   />
                 </div>
                 
@@ -259,11 +280,13 @@ const Auth = () => {
                       value={registerPassword}
                       onChange={(e) => setRegisterPassword(e.target.value)}
                       required
+                      autoComplete="new-password"
                     />
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                      aria-label={showRegisterPassword ? "Hide password" : "Show password"}
                     >
                       {showRegisterPassword ? (
                         <EyeOff className="h-4 w-4 text-luxury-slate" />
@@ -287,11 +310,13 @@ const Auth = () => {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
+                      autoComplete="new-password"
                     />
                     <button
                       type="button"
                       className="absolute right-3 top-1/2 transform -translate-y-1/2"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
                     >
                       {showConfirmPassword ? (
                         <EyeOff className="h-4 w-4 text-luxury-slate" />
@@ -332,7 +357,7 @@ const Auth = () => {
             Protected by industry-standard encryption and security protocols.
           </p>
           <p className="mt-1">
-            &copy; {new Date().getFullYear()} Evans Kenya Homes. All rights reserved.
+            &copy; {new Date().getFullYear()} Eden Ridge Realty. All rights reserved.
           </p>
         </div>
       </div>

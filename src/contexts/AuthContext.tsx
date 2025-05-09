@@ -2,6 +2,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface AuthContextProps {
   user: User | null;
@@ -18,19 +19,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Set up the auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, newSession) => {
-        setSession(newSession);
-        setUser(newSession?.user ?? null);
-        
-        // Check if user is an admin based on email
-        if (newSession?.user) {
-          setIsAdmin(newSession.user.email?.includes('admin') || false);
-        } else {
+      (event, newSession) => {
+        if (event === 'SIGNED_OUT') {
+          setUser(null);
+          setSession(null);
           setIsAdmin(false);
+        } else if (newSession) {
+          setSession(newSession);
+          setUser(newSession.user);
+          
+          // Check if user is an admin based on email
+          if (newSession.user) {
+            setIsAdmin(newSession.user.email?.includes('admin') || false);
+          }
         }
       }
     );
@@ -46,15 +52,48 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
       
       setIsLoading(false);
+    }).catch((error) => {
+      console.error("Error getting session:", error);
+      setIsLoading(false);
     });
+
+    // Check for session expiration
+    const checkSessionInterval = setInterval(async () => {
+      const { data } = await supabase.auth.getSession();
+      if (!data.session) {
+        // Session expired
+        setUser(null);
+        setSession(null);
+        setIsAdmin(false);
+        toast({
+          title: "Session expired",
+          description: "Your session has expired. Please sign in again.",
+          variant: "destructive",
+        });
+      }
+    }, 5 * 60 * 1000); // Check every 5 minutes
 
     return () => {
       subscription.unsubscribe();
+      clearInterval(checkSessionInterval);
     };
-  }, []);
+  }, [toast]);
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out successfully",
+        description: "You have been signed out of your account.",
+      });
+    } catch (error) {
+      console.error("Sign out error:", error);
+      toast({
+        title: "Sign out failed",
+        description: "There was an error signing you out. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const value = {

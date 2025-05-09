@@ -1,8 +1,19 @@
 
 import { Button } from "@/components/ui/button";
 import { PhoneCall, MessageSquare } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const CTASection = () => {
+  // Define safe contact methods
+  const phoneNumber = "+254700000000"; // Replace with your actual phone number
+  const whatsappMessage = "Hello Eden Ridge Realty, I'm interested in learning more about your properties.";
+  
+  // Format phone number for tel link
+  const formattedPhoneNumber = phoneNumber.replace(/\s/g, "");
+  
+  // Create safe WhatsApp link
+  const whatsappLink = `https://wa.me/${formattedPhoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
   return (
     <section className="bg-luxury-navy py-16 lg:py-20">
       <div className="container mx-auto px-4 text-center">
@@ -14,11 +25,25 @@ const CTASection = () => {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="bg-luxury-gold hover:bg-luxury-gold/90 text-luxury-navy h-auto py-6 px-8 text-lg">
+          <Button 
+            className="bg-luxury-gold hover:bg-luxury-gold/90 text-luxury-navy h-auto py-6 px-8 text-lg"
+            onClick={() => {
+              // Use safe method to initiate phone call
+              window.location.href = `tel:${formattedPhoneNumber}`;
+            }}
+          >
             <PhoneCall className="mr-2 h-5 w-5" />
             Call Us Now
           </Button>
-          <Button variant="outline" className="border-2 border-white text-white hover:bg-white hover:text-luxury-navy h-auto py-6 px-8 text-lg">
+          
+          <Button 
+            variant="outline" 
+            className="border-2 border-white text-white hover:bg-white hover:text-luxury-navy h-auto py-6 px-8 text-lg"
+            onClick={() => {
+              // Open WhatsApp in new tab for better security
+              window.open(whatsappLink, "_blank", "noopener,noreferrer");
+            }}
+          >
             <MessageSquare className="mr-2 h-5 w-5" />
             Message on WhatsApp
           </Button>

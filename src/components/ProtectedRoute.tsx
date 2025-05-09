@@ -1,6 +1,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 
@@ -10,15 +10,35 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
-  const { user, isAdmin, isLoading } = useAuth();
+  const { user, isAdmin, isLoading, session } = useAuth();
   const [isChecking, setIsChecking] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     // Wait for auth status to be determined
     if (!isLoading) {
-      setIsChecking(false);
+      // Add short delay to ensure auth state is fully processed
+      const timer = setTimeout(() => {
+        setIsChecking(false);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [isLoading]);
+
+  // Add an extra validation of the session
+  useEffect(() => {
+    const validateSession = async () => {
+      if (!isLoading && user) {
+        const { data } = await supabase.auth.getSession();
+        if (!data.session) {
+          // Force reload the page to clear auth state
+          window.location.href = '/auth';
+        }
+      }
+    };
+    
+    validateSession();
+  }, [isLoading, user]);
 
   if (isChecking || isLoading) {
     return (
@@ -28,8 +48,9 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     );
   }
 
-  if (!user) {
-    return <Navigate to="/auth" replace />;
+  if (!user || !session) {
+    // Redirect to auth page but remember where they were trying to go
+    return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname)}`} replace />;
   }
 
   if (requireAdmin && !isAdmin) {
