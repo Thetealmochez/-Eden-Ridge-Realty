@@ -98,7 +98,7 @@ const Properties = () => {
     
     // Filter by price range
     filtered = filtered.filter(property => {
-      const price = typeof property.numericPrice === 'number' ? property.numericPrice : 0;
+      const price = property.numericPrice !== undefined ? property.numericPrice : 0;
       return price >= minPrice && price <= maxPrice;
     });
     

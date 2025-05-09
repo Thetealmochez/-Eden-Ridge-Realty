@@ -35,6 +35,7 @@ const FeaturedProperties = () => {
             id: prop.id,
             title: prop.title || 'Luxury Property',
             price: prop.price ? `KSh ${prop.price.toLocaleString()}` : 'Price on Request',
+            numericPrice: prop.price || 0,
             location: prop.location || 'Kenya',
             bedrooms: prop.bedrooms || 0,
             bathrooms: prop.bathrooms || 0,

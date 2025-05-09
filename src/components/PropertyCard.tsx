@@ -14,10 +14,11 @@ export interface PropertyCardProps {
   area: number;
   image: string;
   featured?: boolean;
-  propertyType: 'Residential' | 'Commercial';
+  propertyType: string; // Changed from 'Residential' | 'Commercial' to string
   description?: string;
   yearBuilt?: number;
   amenities?: string[];
+  numericPrice?: number; // Added numericPrice field
 }
 
 const PropertyCard = ({
