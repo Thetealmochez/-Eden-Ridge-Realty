@@ -20,13 +20,13 @@ const AboutSection = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div>
             <h2 className="text-3xl md:text-4xl font-semibold text-luxury-navy mb-4 gold-underline">
-              About Evans Kenya Homes
+              About Eden Ridge Realty
             </h2>
             <p className="text-luxury-slate mb-6 leading-relaxed">
-              For over a decade, Evans Kenya Homes has been the premier luxury real estate agency serving Kenya's most discerning clients. We specialize in high-end residential homes, luxury estates, commercial properties, and investment opportunities across the country's most prestigious locations.
+              For over a decade, Eden Ridge Realty has been the premier luxury real estate agency serving Kenya's most discerning clients. We specialize in high-end residential homes, luxury estates, commercial properties, and investment opportunities across the country's most prestigious locations.
             </p>
             <p className="text-luxury-slate mb-8 leading-relaxed">
-              Led by Evans, a licensed real estate professional with extensive knowledge of Kenya's premium property market, our team provides personalized service and expert guidance to ensure you find the perfect property that meets your unique needs and investment goals.
+              Led by our expert team of licensed real estate professionals with extensive knowledge of Kenya's premium property market, we provide personalized service and expert guidance to ensure you find the perfect property that meets your unique needs and investment goals.
             </p>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
@@ -47,11 +47,11 @@ const AboutSection = () => {
             <div className="relative h-full w-full">
               <img 
                 src="/images/agent.jpg" 
-                alt="Evans - Luxury Real Estate Agent" 
+                alt="Eden Ridge Realty - Luxury Real Estate Agent" 
                 className="w-full h-full object-cover"
               />
               <div className="absolute bottom-0 left-0 right-0 bg-luxury-navy/90 p-8">
-                <h3 className="text-xl font-semibold text-white mb-2">Evans Mwangi</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">Sarah Johnson</h3>
                 <p className="text-white/80 mb-6">Founder & Lead Real Estate Consultant</p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

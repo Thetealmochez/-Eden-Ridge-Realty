@@ -10,7 +10,7 @@ const CTASection = () => {
           Ready to Find Your Dream Property in Kenya?
         </h2>
         <p className="text-lg text-white/80 max-w-3xl mx-auto mb-8">
-          Connect with Evans today for personalized assistance with premium residential and commercial properties across Kenya's most prestigious locations.
+          Connect with Eden Ridge Realty today for personalized assistance with premium residential and commercial properties across Kenya's most prestigious locations.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">

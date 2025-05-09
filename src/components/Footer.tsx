@@ -1,4 +1,3 @@
-
 import { PhoneCall, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
           <div>
             <h3 className="text-2xl font-semibold mb-6">
-              Evans Kenya Homes
+              Eden Ridge Realty
             </h3>
             <p className="text-white/70 mb-6 leading-relaxed">
               Premium real estate agency specializing in luxury residential and commercial properties across Kenya's most sought-after locations.
@@ -24,7 +23,7 @@ const Footer = () => {
               </div>
               <div className="flex items-start">
                 <Mail className="h-5 w-5 text-luxury-gold mr-3" />
-                <span className="text-white/80">info@evanskenyahomes.com</span>
+                <span className="text-white/80">info@edenridgerealty.com</span>
               </div>
               <div className="flex items-start">
                 <MapPin className="h-5 w-5 text-luxury-gold mr-3" />
@@ -150,7 +149,7 @@ const Footer = () => {
         
         <div className="mt-12 pt-6 border-t border-white/10 text-center">
           <p className="text-white/60">
-            © {currentYear} Evans Kenya Homes. All rights reserved.
+            © {currentYear} Eden Ridge Realty. All rights reserved.
           </p>
         </div>
       </div>
