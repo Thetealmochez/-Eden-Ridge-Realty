@@ -6,10 +6,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { PhoneCall, Mail, MapPin } from "lucide-react";
+import { PhoneCall, Mail, MapPin, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const ContactForm = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,22 +35,73 @@ const ContactForm = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    toast({
-      title: "Form Submitted",
-      description: "Thank you for your inquiry. Evans will contact you soon!",
-    });
+    // Simple validation
+    if (!formData.name || !formData.email || !formData.message) {
+      toast({
+        title: "Missing Information",
+        description: "Please fill in all required fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address.",
+        variant: "destructive",
+      });
+      return;
+    }
     
-    // Reset form
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      interest: "",
-      message: ""
-    });
+    setIsSubmitting(true);
+    
+    try {
+      // Insert the lead into the database
+      const { data, error } = await supabase
+        .from('leads')
+        .insert([
+          { 
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            status: 'new'
+          }
+        ]);
+        
+      if (error) {
+        throw error;
+      }
+      
+      toast({
+        title: "Form Submitted",
+        description: "Thank you for your inquiry. Evans will contact you soon!",
+      });
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        interest: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Submission Failed",
+        description: "There was an error submitting your inquiry. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -140,7 +193,7 @@ const ContactForm = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label htmlFor="name">Full Name*</Label>
                     <Input 
                       id="name" 
                       name="name"
@@ -152,7 +205,7 @@ const ContactForm = () => {
                   </div>
                   
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label htmlFor="email">Email Address*</Label>
                     <Input 
                       id="email" 
                       name="email"
@@ -174,7 +227,6 @@ const ContactForm = () => {
                       placeholder="+254 XXX XXX XXX"
                       value={formData.phone}
                       onChange={handleChange}
-                      required
                     />
                   </div>
                   
@@ -196,7 +248,7 @@ const ContactForm = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
+                  <Label htmlFor="message">Message*</Label>
                   <Textarea 
                     id="message" 
                     name="message"
@@ -208,8 +260,19 @@ const ContactForm = () => {
                   />
                 </div>
                 
-                <Button type="submit" className="w-full bg-luxury-navy hover:bg-luxury-navy/90 h-12">
-                  Send Message
+                <Button 
+                  type="submit" 
+                  className="w-full bg-luxury-navy hover:bg-luxury-navy/90 h-12"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
                 </Button>
                 
                 <p className="text-xs text-center text-luxury-slate">

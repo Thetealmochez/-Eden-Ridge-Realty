@@ -1,74 +1,242 @@
 
 import { useState, useEffect } from 'react';
-import { Button } from '@/components/ui/button';
-import { Menu, X, Phone } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from "@/components/ui/button";
+import { Menu, X, ChevronDown, UserCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+  const { user, isAdmin, signOut } = useAuth();
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
+      if (window.scrollY > 10) {
+        setScrolled(true);
       } else {
-        setIsScrolled(false);
+        setScrolled(false);
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // No need to navigate, the auth listener will handle it
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 luxury-transition ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
-      <div className="container mx-auto px-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <a href="/" className="flex items-center">
-            <h1 className={`text-2xl md:text-3xl font-semibold luxury-transition ${isScrolled ? 'text-luxury-navy' : 'text-white'}`}>
-              <span className="font-bold">Evans</span> Kenya Homes
-            </h1>
-          </a>
-        </div>
+    <nav 
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        scrolled ? 'bg-white shadow-md py-2' : 'bg-white/90 py-4'
+      }`}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="text-2xl font-bold text-luxury-navy">
+            Evans <span className="text-luxury-gold">Kenya Homes</span>
+          </Link>
+          
+          {/* Desktop Menu */}
+          <div className="hidden lg:flex items-center space-x-8">
+            <Link 
+              to="/" 
+              className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/' ? 'font-semibold text-luxury-navy' : ''}`}
+            >
+              Home
+            </Link>
+            
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center text-luxury-slate hover:text-luxury-navy">
+                Properties <ChevronDown className="ml-1 h-4 w-4" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link to="/properties" className="w-full">All Properties</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/locations/nairobi" className="w-full">Nairobi</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/locations/karen" className="w-full">Karen</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/locations/runda" className="w-full">Runda</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link to="/locations/mombasa" className="w-full">Mombasa</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            
+            <Link 
+              to="/about" 
+              className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/about' ? 'font-semibold text-luxury-navy' : ''}`}
+            >
+              About
+            </Link>
+            
+            <a 
+              href="#contact"
+              className="text-luxury-slate hover:text-luxury-navy"
+            >
+              Contact
+            </a>
 
-        {/* Desktop Menu */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="#properties" className={`luxury-transition font-medium ${isScrolled ? 'text-luxury-navy hover:text-luxury-gold' : 'text-white hover:text-luxury-gold'}`}>Properties</a>
-          <a href="#locations" className={`luxury-transition font-medium ${isScrolled ? 'text-luxury-navy hover:text-luxury-gold' : 'text-white hover:text-luxury-gold'}`}>Areas</a>
-          <a href="#about" className={`luxury-transition font-medium ${isScrolled ? 'text-luxury-navy hover:text-luxury-gold' : 'text-white hover:text-luxury-gold'}`}>About</a>
-          <a href="#contact" className={`luxury-transition font-medium ${isScrolled ? 'text-luxury-navy hover:text-luxury-gold' : 'text-white hover:text-luxury-gold'}`}>Contact</a>
-          <Button variant="outline" className={`border-2 luxury-transition ${isScrolled ? 'border-luxury-navy text-luxury-navy hover:bg-luxury-navy hover:text-white' : 'border-white text-white hover:bg-white hover:text-luxury-navy'}`}>
-            <Phone className="mr-2 h-4 w-4" />
-            <span>+254 700 123 456</span>
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <button className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-          {isMobileMenuOpen ? 
-            <X className={`h-6 w-6 ${isScrolled ? 'text-luxury-navy' : 'text-white'}`} /> : 
-            <Menu className={`h-6 w-6 ${isScrolled ? 'text-luxury-navy' : 'text-white'}`} />
-          }
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg animate-fade-in">
-          <div className="container mx-auto px-4 py-6 flex flex-col space-y-4">
-            <a href="#properties" className="text-luxury-navy hover:text-luxury-gold py-2 font-medium" onClick={() => setIsMobileMenuOpen(false)}>Properties</a>
-            <a href="#locations" className="text-luxury-navy hover:text-luxury-gold py-2 font-medium" onClick={() => setIsMobileMenuOpen(false)}>Areas</a>
-            <a href="#about" className="text-luxury-navy hover:text-luxury-gold py-2 font-medium" onClick={() => setIsMobileMenuOpen(false)}>About</a>
-            <a href="#contact" className="text-luxury-navy hover:text-luxury-gold py-2 font-medium" onClick={() => setIsMobileMenuOpen(false)}>Contact</a>
-            <Button variant="outline" className="border-2 border-luxury-navy text-luxury-navy hover:bg-luxury-navy hover:text-white w-full justify-center">
-              <Phone className="mr-2 h-4 w-4" />
-              <span>+254 700 123 456</span>
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center text-luxury-navy">
+                    <UserCircle className="mr-1 h-5 w-5" />
+                    <span className="max-w-[100px] truncate">
+                      {user.email?.split('@')[0]}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  {isAdmin && (
+                    <>
+                      <DropdownMenuItem>
+                        <Link to="/admin" className="w-full">Admin Dashboard</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                    </>
+                  )}
+                  <DropdownMenuItem onClick={handleSignOut}>
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Link to="/auth">
+                <Button className="bg-luxury-navy hover:bg-luxury-navy/90">
+                  Sign In
+                </Button>
+              </Link>
+            )}
+          </div>
+          
+          {/* Mobile Menu Button */}
+          <div className="lg:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleMenu}
+              aria-label="Toggle Menu"
+            >
+              {isOpen ? <X /> : <Menu />}
             </Button>
           </div>
         </div>
-      )}
+        
+        {/* Mobile Menu */}
+        {isOpen && (
+          <div className="lg:hidden mt-4 py-4 border-t border-gray-100">
+            <div className="flex flex-col space-y-4">
+              <Link 
+                to="/" 
+                className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/' ? 'font-semibold text-luxury-navy' : ''}`}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/properties" 
+                className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/properties' ? 'font-semibold text-luxury-navy' : ''}`}
+              >
+                Properties
+              </Link>
+              <div className="pl-4 flex flex-col space-y-2">
+                <Link 
+                  to="/locations/nairobi" 
+                  className="text-luxury-slate hover:text-luxury-navy text-sm"
+                >
+                  Nairobi
+                </Link>
+                <Link 
+                  to="/locations/karen" 
+                  className="text-luxury-slate hover:text-luxury-navy text-sm"
+                >
+                  Karen
+                </Link>
+                <Link 
+                  to="/locations/runda" 
+                  className="text-luxury-slate hover:text-luxury-navy text-sm"
+                >
+                  Runda
+                </Link>
+                <Link 
+                  to="/locations/mombasa" 
+                  className="text-luxury-slate hover:text-luxury-navy text-sm"
+                >
+                  Mombasa
+                </Link>
+              </div>
+              <Link 
+                to="/about" 
+                className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/about' ? 'font-semibold text-luxury-navy' : ''}`}
+              >
+                About
+              </Link>
+              <a 
+                href="#contact"
+                className="text-luxury-slate hover:text-luxury-navy"
+              >
+                Contact
+              </a>
+              
+              {user ? (
+                <>
+                  {isAdmin && (
+                    <Link 
+                      to="/admin" 
+                      className="text-luxury-navy font-medium"
+                    >
+                      Admin Dashboard
+                    </Link>
+                  )}
+                  <Button 
+                    variant="outline" 
+                    onClick={handleSignOut}
+                    className="justify-start"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <Link to="/auth" className="w-full">
+                  <Button className="w-full bg-luxury-navy hover:bg-luxury-navy/90">
+                    Sign In
+                  </Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
     </nav>
   );
 };
