@@ -9,11 +9,13 @@ import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PageMeta from "@/components/PageMeta";
+import SkipToContent from "@/components/SkipToContent";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
       <PageMeta />
+      <SkipToContent />
       <Navbar />
       <main id="main-content">
         <HeroSection />

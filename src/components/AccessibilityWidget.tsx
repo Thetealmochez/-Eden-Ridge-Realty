@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Eye, Type, Moon, ArrowUp, Minus, Plus, Rotate, X } from "lucide-react";
+import { Eye, Type, Moon, ArrowUp, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -92,7 +92,7 @@ const AccessibilityWidget = () => {
                     <Plus className="h-4 w-4" />
                   </Button>
                   <Button variant="outline" size="sm" onClick={resetFontSize}>
-                    <Rotate className="h-4 w-4 mr-2" />
+                    <RotateCcw className="h-4 w-4 mr-2" />
                     Reset
                   </Button>
                 </div>
