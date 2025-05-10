@@ -1,17 +1,16 @@
 
 import { Button } from "@/components/ui/button";
 import { PhoneCall, MessageSquare } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const CTASection = () => {
-  // Define safe contact methods
+  // Define safe contact methods with properly formatted phone number
   const phoneNumber = "+254700000000"; // Replace with your actual phone number
   const whatsappMessage = "Hello Eden Ridge Realty, I'm interested in learning more about your properties.";
   
-  // Format phone number for tel link
+  // Format phone number for tel link (remove any spaces)
   const formattedPhoneNumber = phoneNumber.replace(/\s/g, "");
   
-  // Create safe WhatsApp link
+  // Create safe WhatsApp link with properly encoded message
   const whatsappLink = `https://wa.me/${formattedPhoneNumber}?text=${encodeURIComponent(whatsappMessage)}`;
 
   return (
@@ -40,7 +39,7 @@ const CTASection = () => {
             variant="outline" 
             className="border-2 border-white text-white hover:bg-white hover:text-luxury-navy h-auto py-6 px-8 text-lg"
             onClick={() => {
-              // Open WhatsApp in new tab for better security
+              // Open WhatsApp in new tab with security attributes
               window.open(whatsappLink, "_blank", "noopener,noreferrer");
             }}
           >
