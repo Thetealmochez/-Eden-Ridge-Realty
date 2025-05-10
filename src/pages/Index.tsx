@@ -8,12 +8,14 @@ import CTASection from "@/components/CTASection";
 import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PageMeta from "@/components/PageMeta";
 
 const Index = () => {
   return (
     <div className="min-h-screen flex flex-col">
+      <PageMeta />
       <Navbar />
-      <main>
+      <main id="main-content">
         <HeroSection />
         <FeaturedProperties />
         <LocationsSection />

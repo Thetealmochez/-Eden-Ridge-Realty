@@ -38,7 +38,7 @@
     --radius: 0.5rem;
   }
 
-  .dark {
+  .dark-mode {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
 
@@ -66,6 +66,19 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+  }
+
+  .high-contrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    
+    --luxury-navy: 60 100% 50%;
+    --luxury-gold: 0 0% 100%;
+    
+    filter: contrast(1.5);
   }
 }
 
@@ -98,5 +111,11 @@
     width: 3rem;
     height: 2px;
     background-color: theme('colors.luxury.gold');
+  }
+  
+  /* Skip to content link for keyboard accessibility */
+  .skip-to-content {
+    @apply fixed top-0 left-0 p-3 m-3 bg-luxury-gold text-luxury-navy font-medium -translate-y-full focus:translate-y-0 z-50;
+    transition: transform 0.3s;
   }
 }
