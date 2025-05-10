@@ -62,32 +62,32 @@ const Navbar = () => {
           </Link>
           
           {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-6">
             <Link 
               to="/" 
-              className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/' ? 'font-semibold text-luxury-navy' : ''}`}
+              className={`text-luxury-slate hover:text-luxury-navy transition-colors ${location.pathname === '/' ? 'font-semibold text-luxury-navy' : ''}`}
             >
               Home
             </Link>
             
             <DropdownMenu>
-              <DropdownMenuTrigger className="flex items-center text-luxury-slate hover:text-luxury-navy">
+              <DropdownMenuTrigger className="flex items-center text-luxury-slate hover:text-luxury-navy transition-colors">
                 Properties <ChevronDown className="ml-1 h-4 w-4" />
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/properties" className="w-full">All Properties</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/locations/nairobi" className="w-full">Nairobi</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/locations/karen" className="w-full">Karen</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/locations/runda" className="w-full">Runda</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/locations/mombasa" className="w-full">Mombasa</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -95,14 +95,21 @@ const Navbar = () => {
             
             <Link 
               to="/about" 
-              className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/about' ? 'font-semibold text-luxury-navy' : ''}`}
+              className={`text-luxury-slate hover:text-luxury-navy transition-colors ${location.pathname === '/about' ? 'font-semibold text-luxury-navy' : ''}`}
             >
               About
+            </Link>
+
+            <Link 
+              to="/partners" 
+              className={`text-luxury-slate hover:text-luxury-navy transition-colors ${location.pathname === '/partners' ? 'font-semibold text-luxury-navy' : ''}`}
+            >
+              Partners
             </Link>
             
             <a 
               href="#contact"
-              className="text-luxury-slate hover:text-luxury-navy"
+              className="text-luxury-slate hover:text-luxury-navy transition-colors"
             >
               Contact
             </a>
@@ -120,7 +127,7 @@ const Navbar = () => {
                 <DropdownMenuContent align="end">
                   {isAdmin && (
                     <>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem asChild>
                         <Link to="/admin" className="w-full">Admin Dashboard</Link>
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -200,6 +207,12 @@ const Navbar = () => {
                 className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/about' ? 'font-semibold text-luxury-navy' : ''}`}
               >
                 About
+              </Link>
+              <Link 
+                to="/partners" 
+                className={`text-luxury-slate hover:text-luxury-navy ${location.pathname === '/partners' ? 'font-semibold text-luxury-navy' : ''}`}
+              >
+                Partners
               </Link>
               <a 
                 href="#contact"
