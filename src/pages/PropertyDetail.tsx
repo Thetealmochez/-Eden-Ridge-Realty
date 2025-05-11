@@ -63,6 +63,20 @@ const PropertyDetail = () => {
         }
         
         if (data) {
+          // Process images to ensure it's a string array
+          let processedImages: string[] = [];
+          
+          // Check if images exists and is an array
+          if (data.images && Array.isArray(data.images)) {
+            processedImages = data.images.filter((img): img is string => 
+              typeof img === 'string' && img.trim() !== ''
+            );
+          } 
+          // If images is a string, convert it to an array with one element
+          else if (typeof data.images === 'string' && data.images.trim() !== '') {
+            processedImages = [data.images];
+          }
+          
           // Format the property data
           const formattedProperty: PropertyCardProps = {
             id: data.id,
@@ -73,8 +87,8 @@ const PropertyDetail = () => {
             bedrooms: data.bedrooms || 0,
             bathrooms: data.bathrooms || 0,
             area: data.size_sqft || 0,
-            image: data.images && data.images[0] ? data.images[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
-            images: data.images || [],
+            image: processedImages.length > 0 ? processedImages[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
+            images: processedImages,
             propertyType: data.property_type || 'Residential',
             description: data.description || 'Luxury property in prime location',
             yearBuilt: 2023,
