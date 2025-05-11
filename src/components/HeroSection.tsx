@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Search, ChevronDown } from 'lucide-react';
@@ -14,7 +13,19 @@ const HeroSection = () => {
     // Build query parameters
     const params = new URLSearchParams();
     if (propertyType !== 'any') params.append('type', propertyType);
-    if (location && location !== 'any') params.append('location', location);
+    
+    // If a specific location is selected, navigate to that location page
+    if (location && location !== 'any') {
+      // If it's one of our specific location pages, go to that page
+      if (['nairobi', 'karen', 'westlands', 'kileleshwa', 'runda', 'mombasa', 'kisumu', 'naivasha', 'nanyuki'].includes(location.toLowerCase())) {
+        navigate(`/locations/${location.toLowerCase()}`);
+        return;
+      } else {
+        // Otherwise use it as a filter on the properties page
+        params.append('location', location);
+      }
+    }
+    
     if (priceRange !== 'any') params.append('price', priceRange);
     
     // Navigate to properties page with filters

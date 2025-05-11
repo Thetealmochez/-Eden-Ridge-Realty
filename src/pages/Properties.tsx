@@ -11,9 +11,11 @@ import { Slider } from '@/components/ui/slider';
 import { Loader2, Search as SearchIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useSearchParams } from 'react-router-dom';
 
 const Properties = () => {
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [properties, setProperties] = useState<PropertyCardProps[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyCardProps[]>([]);
@@ -26,6 +28,25 @@ const Properties = () => {
   const [maxPrice, setMaxPrice] = useState(200000000); // 200M
   const [bedrooms, setBedrooms] = useState('any');
   const [locations, setLocations] = useState<string[]>([]);
+
+  // Initialize filters from URL parameters
+  useEffect(() => {
+    const typeParam = searchParams.get('type');
+    const locationParam = searchParams.get('location');
+    const priceParam = searchParams.get('price');
+    const bedroomsParam = searchParams.get('bedrooms');
+    
+    if (typeParam) setPropertyType(typeParam);
+    if (locationParam) setLocation(locationParam);
+    if (bedroomsParam) setBedrooms(bedroomsParam);
+    
+    // Handle price range parameters
+    if (priceParam) {
+      const [min, max] = priceParam.split('-').map(Number);
+      if (!isNaN(min)) setMinPrice(min);
+      if (!isNaN(max)) setMaxPrice(max);
+    }
+  }, [searchParams]);
 
   // Fetch all properties
   useEffect(() => {
@@ -55,7 +76,7 @@ const Properties = () => {
             bedrooms: prop.bedrooms || 0,
             bathrooms: prop.bathrooms || 0,
             area: prop.size_sqft || 0,
-            image: prop.images && prop.images[0] ? prop.images[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
+            image: prop.images && Array.isArray(prop.images) && prop.images[0] ? prop.images[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
             propertyType: prop.property_type || 'Residential',
             description: prop.description || 'Luxury property in prime location',
             yearBuilt: 2023,
@@ -88,12 +109,16 @@ const Properties = () => {
     
     // Filter by property type
     if (propertyType !== 'all') {
-      filtered = filtered.filter(property => property.propertyType === propertyType);
+      filtered = filtered.filter(property => 
+        property.propertyType.toLowerCase() === propertyType.toLowerCase()
+      );
     }
     
     // Filter by location
     if (location !== 'all') {
-      filtered = filtered.filter(property => property.location === location);
+      filtered = filtered.filter(property => 
+        property.location.toLowerCase() === location.toLowerCase()
+      );
     }
     
     // Filter by price range
