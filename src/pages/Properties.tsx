@@ -11,10 +11,11 @@ import { Slider } from '@/components/ui/slider';
 import { Loader2, Search as SearchIcon } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 const Properties = () => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [properties, setProperties] = useState<PropertyCardProps[]>([]);
@@ -67,21 +68,44 @@ const Properties = () => {
           const uniqueLocations = [...new Set(data.map(item => item.location))].filter(Boolean) as string[];
           setLocations(uniqueLocations);
           
-          const formattedProperties = data.map(prop => ({
-            id: prop.id,
-            title: prop.title || 'Luxury Property',
-            price: prop.price ? `KSh ${prop.price.toLocaleString()}` : 'Price on Request',
-            numericPrice: prop.price || 0,
-            location: prop.location || 'Kenya',
-            bedrooms: prop.bedrooms || 0,
-            bathrooms: prop.bathrooms || 0,
-            area: prop.size_sqft || 0,
-            image: prop.images && Array.isArray(prop.images) && prop.images[0] ? prop.images[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
-            propertyType: prop.property_type || 'Residential',
-            description: prop.description || 'Luxury property in prime location',
-            yearBuilt: 2023,
-            amenities: ['Luxury', 'Premium', 'Exclusive']
-          }));
+          const formattedProperties = data.map(prop => {
+            // Safely handle the images property
+            let mainImage = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9"; // default image
+            
+            if (prop.images) {
+              // Handle various cases for images data
+              if (Array.isArray(prop.images) && prop.images.length > 0) {
+                // If it's an array, take the first item
+                const firstImage = prop.images[0];
+                if (typeof firstImage === 'string') {
+                  mainImage = firstImage;
+                }
+              } else if (typeof prop.images === 'string') {
+                // If it's directly a string
+                mainImage = prop.images;
+              }
+            }
+            
+            return {
+              id: prop.id,
+              title: prop.title || 'Luxury Property',
+              price: prop.price ? `KSh ${prop.price.toLocaleString()}` : 'Price on Request',
+              numericPrice: prop.price || 0,
+              location: prop.location || 'Kenya',
+              bedrooms: prop.bedrooms || 0,
+              bathrooms: prop.bathrooms || 0,
+              area: prop.size_sqft || 0,
+              image: mainImage,
+              propertyType: prop.property_type || 'Residential',
+              description: prop.description || 'Luxury property in prime location',
+              yearBuilt: 2023,
+              amenities: ['Luxury', 'Premium', 'Exclusive'],
+              // Handle multiple images for property cards
+              images: Array.isArray(prop.images) ? 
+                prop.images.filter(img => typeof img === 'string') as string[] : 
+                [mainImage]
+            };
+          });
           
           setProperties(formattedProperties);
           setFilteredProperties(formattedProperties);
@@ -162,6 +186,11 @@ const Properties = () => {
     setMaxPrice(200000000);
     setBedrooms('any');
     setSearchTerm('');
+  };
+
+  // Handler to navigate to properties page
+  const handleViewAllClick = () => {
+    navigate('/properties');
   };
 
   return (
