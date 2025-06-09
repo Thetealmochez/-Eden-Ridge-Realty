@@ -391,7 +391,7 @@ const AgentPage = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-luxury-slate">Response Time:</span>
-                      <span className="font-medium">< 30 mins</span>
+                      <span className="font-medium">&lt; 30 mins</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-luxury-slate">Active Listings:</span>
@@ -399,7 +399,7 @@ const AgentPage = () => {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-luxury-slate">Service Areas:</span>
-                      <span className="font-medium">Nairobi & Suburbs</span>
+                      <span className="font-medium">Nairobi &amp; Suburbs</span>
                     </div>
                   </div>
                 </CardContent>
