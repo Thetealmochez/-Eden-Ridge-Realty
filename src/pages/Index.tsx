@@ -1,35 +1,53 @@
 
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProperties from "@/components/FeaturedProperties";
-import LocationsSection from "@/components/LocationsSection";
 import AboutSection from "@/components/AboutSection";
+import LocationsSection from "@/components/LocationsSection";
+import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
-import ContactForm from "@/components/ContactForm";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PageMeta from "@/components/PageMeta";
+import NotificationBanner from "@/components/NotificationBanner";
+import SkipToContent from "@/components/SkipToContent";
 
 const Index = () => {
+  useEffect(() => {
+    // Add any initialization logic here
+    console.log("Eden Ridge Realty website loaded successfully");
+  }, []);
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <PageMeta />
-      <Navbar />
-      <main id="main-content">
-        <HeroSection />
-        <div id="properties">
+    <>
+      <PageMeta 
+        title="Eden Ridge Realty | Luxury Real Estate in Kenya - Premium Properties"
+        description="Discover luxury residential and commercial properties across Kenya's most prestigious locations. Expert real estate services in Nairobi, Mombasa, Karen, and beyond."
+        keywords="luxury real estate Kenya, premium properties Nairobi, Karen homes, Westlands apartments, commercial property Kenya, Eden Ridge Realty"
+      />
+      <SkipToContent />
+      
+      <div className="min-h-screen">
+        <NotificationBanner 
+          type="info" 
+          message="🎉 New luxury properties now available in Karen and Runda! Contact us for exclusive viewings."
+          className="sticky top-0 z-50"
+        />
+        
+        <Navbar />
+        <main>
+          <HeroSection />
           <FeaturedProperties />
-        </div>
-        <LocationsSection />
-        <AboutSection />
-        <CTASection />
-        <div id="contact">
-          <ContactForm />
-        </div>
-      </main>
-      <Footer />
-      <WhatsAppButton />
-    </div>
+          <AboutSection />
+          <LocationsSection />
+          <TestimonialsSection />
+          <CTASection />
+        </main>
+        <Footer />
+        <WhatsAppButton />
+      </div>
+    </>
   );
 };
 
