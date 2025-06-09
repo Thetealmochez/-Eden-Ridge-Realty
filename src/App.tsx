@@ -17,6 +17,7 @@ import Contact from "./pages/Contact";
 import Services from "./pages/Services";
 import Blog from "./pages/Blog";
 import LocationPage from "./pages/LocationPage";
+import AgentPage from "./pages/AgentPage";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -44,6 +45,7 @@ const App = () => (
                 <Route path="/services" element={<Services />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/locations/:locationName" element={<LocationPage />} />
+                <Route path="/agent/:agentId" element={<AgentPage />} />
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/privacy-policy" element={<PrivacyPolicy />} />
                 <Route path="/partners" element={<Partners />} />
