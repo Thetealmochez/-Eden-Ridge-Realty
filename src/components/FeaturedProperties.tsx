@@ -21,6 +21,8 @@ const FeaturedProperties = () => {
     const fetchProperties = async () => {
       try {
         setLoading(true);
+        console.log('Fetching featured properties...');
+        
         const { data, error } = await supabase
           .from('properties')
           .select('*')
@@ -28,17 +30,25 @@ const FeaturedProperties = () => {
           .order('created_at', { ascending: false });
         
         if (error) {
+          console.error('Supabase error fetching featured properties:', error);
           throw error;
         }
         
-        if (data) {
+        console.log('Featured properties data:', data);
+        
+        if (data && Array.isArray(data)) {
           const formattedProperties = formatPropertiesData(data);
+          console.log('Formatted featured properties:', formattedProperties);
           setProperties(formattedProperties);
+        } else {
+          console.log('No featured properties found');
+          setProperties([]);
         }
       } catch (error) {
-        console.error('Error fetching properties:', error);
+        console.error('Error fetching featured properties:', error);
+        setProperties([]); // Set empty array instead of crashing
         toast({
-          title: "Failed to load properties",
+          title: "Failed to load featured properties",
           description: "Please try again later",
           variant: "destructive",
         });
@@ -50,11 +60,13 @@ const FeaturedProperties = () => {
     fetchProperties();
   }, [toast]);
   
-  const filteredProperties = properties.filter(property => 
-    filter === 'all' || 
+  const filteredProperties = properties.filter(property => {
+    if (!property) return false;
+    
+    return filter === 'all' || 
     (filter === 'residential' && property.propertyType === 'Residential') ||
-    (filter === 'commercial' && property.propertyType === 'Commercial')
-  );
+    (filter === 'commercial' && property.propertyType === 'Commercial');
+  });
 
   const handleViewAllClick = () => {
     navigate('/properties');
@@ -112,6 +124,7 @@ const FeaturedProperties = () => {
             ) : (
               <div className="text-center py-10">
                 <p className="text-luxury-slate">No featured properties available at the moment.</p>
+                <p className="text-sm text-luxury-slate mt-2">Properties will appear here once they are added to the database.</p>
               </div>
             )}
           </TabsContent>
