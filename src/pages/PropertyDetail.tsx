@@ -11,6 +11,7 @@ import PropertyImageGallery from "@/components/PropertyImageGallery";
 import PropertyDetailsInfo from "@/components/PropertyDetailsInfo";
 import PropertyContactSidebar from "@/components/PropertyContactSidebar";
 import PropertyCard from "@/components/PropertyCard";
+import PropertyMap from "@/components/PropertyMap";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from '@/integrations/supabase/client';
@@ -20,7 +21,8 @@ import { formatPropertiesData } from '@/services/PropertyDataService';
 import {
   MapPin,
   ArrowLeft,
-  Loader2
+  Loader2,
+  Share2
 } from "lucide-react";
 
 const PropertyDetail = () => {
@@ -166,16 +168,16 @@ const PropertyDetail = () => {
   const breadcrumbPaths = [
     { label: 'Home', href: '/' },
     { label: 'Properties', href: '/properties' },
-    { label: property.title }
+    { label: property?.title }
   ];
 
   return (
     <div className="min-h-screen flex flex-col">
       <PageMeta 
-        title={`${property.title} | Eden Ridge Realty`} 
-        description={`${property.description?.substring(0, 150)}...`}
-        keywords={`${property.title}, ${property.location}, ${property.propertyType}, luxury property, Kenya real estate`}
-        ogImage={property.image}
+        title={`${property?.title} | Eden Ridge Realty`} 
+        description={`${property?.description?.substring(0, 150)}...`}
+        keywords={`${property?.title}, ${property?.location}, ${property?.propertyType}, luxury property, Kenya real estate`}
+        ogImage={property?.image}
       />
       <SkipToContent />
       <Navbar />
@@ -204,18 +206,27 @@ const PropertyDetail = () => {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
               <div>
                 <h1 className="text-3xl md:text-4xl font-serif font-semibold text-luxury-navy mb-2">
-                  {property.title}
+                  {property?.title}
                 </h1>
                 <div className="flex items-center text-luxury-slate">
                   <MapPin className="h-5 w-5 mr-2" />
-                  <span className="text-lg">{property.location}</span>
+                  <span className="text-lg">{property?.location}</span>
                 </div>
               </div>
               
               <div className="flex items-center gap-2">
-                <Badge className={`${property.propertyType === 'Residential' ? 'bg-luxury-navy' : 'bg-luxury-slate'} text-white`}>
-                  {property.propertyType}
+                <Badge className={`${property?.propertyType === 'Residential' ? 'bg-luxury-navy' : 'bg-luxury-slate'} text-white`}>
+                  {property?.propertyType}
                 </Badge>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleShareClick}
+                  className="border-luxury-navy text-luxury-navy hover:bg-luxury-navy/10"
+                >
+                  <Share2 className="h-4 w-4 mr-1" />
+                  Share
+                </Button>
               </div>
             </div>
           </div>
@@ -226,29 +237,31 @@ const PropertyDetail = () => {
             <div className="lg:col-span-2 space-y-8">
               {/* Image Gallery */}
               <PropertyImageGallery 
-                images={property.images || [property.image]}
-                title={property.title}
+                images={property?.images || [property?.image || '']}
+                title={property?.title || ''}
                 className="group"
               />
               
               {/* Property Details */}
               <PropertyDetailsInfo property={property} />
               
-              {/* Map Placeholder */}
+              {/* Interactive Map */}
               <div>
                 <h2 className="text-2xl font-serif font-semibold text-luxury-navy mb-4">
                   Location & Neighborhood
                 </h2>
-                <div className="rounded-lg overflow-hidden border border-gray-200 h-[300px] bg-gray-100 flex items-center justify-center">
-                  <div className="text-center p-4">
-                    <MapPin className="h-12 w-12 text-luxury-navy/50 mb-4 mx-auto" />
-                    <p className="text-luxury-navy font-medium mb-2">
-                      {property.location}
-                    </p>
-                    <p className="text-luxury-slate text-sm">
-                      Interactive map coming soon
-                    </p>
-                  </div>
+                <PropertyMap 
+                  location={property?.location || 'Nairobi'}
+                  title={property?.title}
+                  className="mb-4"
+                />
+                <div className="bg-gray-50 rounded-lg p-4 mt-4">
+                  <h3 className="font-semibold text-luxury-navy mb-2">About this area</h3>
+                  <p className="text-luxury-slate text-sm">
+                    {property?.location} is a prime location in Kenya known for its excellent infrastructure, 
+                    security, and proximity to major amenities. The area offers easy access to shopping centers, 
+                    schools, hospitals, and business districts.
+                  </p>
                 </div>
               </div>
             </div>

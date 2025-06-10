@@ -1,9 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Navbar from "@/components/Navbar";
 import PropertySearchHero from "@/components/PropertySearchHero";
-import PropertyFilters from "@/components/PropertyFilters";
+import AdvancedPropertyFilters from "@/components/AdvancedPropertyFilters";
 import PropertyResults from "@/components/PropertyResults";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -100,9 +99,9 @@ const Properties = () => {
             <BreadcrumbNav customPaths={breadcrumbPaths} />
           </div>
           
-          {/* Filters Section */}
+          {/* Advanced Filters Section */}
           <div className="mb-12">
-            <PropertyFilters
+            <AdvancedPropertyFilters
               searchTerm={searchTerm}
               setSearchTerm={setSearchTerm}
               propertyType={propertyType}
