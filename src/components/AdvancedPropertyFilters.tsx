@@ -248,7 +248,7 @@ const AdvancedPropertyFilters: React.FC<AdvancedPropertyFiltersProps> = ({
                   <Checkbox 
                     id="featured"
                     checked={featuredOnly}
-                    onCheckedChange={setFeaturedOnly}
+                    onCheckedChange={(checked) => setFeaturedOnly(checked === true)}
                   />
                   <label htmlFor="featured" className="text-sm font-medium text-gray-700 flex items-center">
                     <Star className="h-4 w-4 mr-1 text-luxury-gold" />
@@ -355,7 +355,13 @@ const AdvancedPropertyFilters: React.FC<AdvancedPropertyFiltersProps> = ({
                       <Checkbox 
                         id={amenity}
                         checked={amenities.includes(amenity)}
-                        onCheckedChange={() => handleAmenityToggle(amenity)}
+                        onCheckedChange={(checked) => {
+                          if (checked === true) {
+                            setAmenities(prev => [...prev, amenity]);
+                          } else {
+                            setAmenities(prev => prev.filter(a => a !== amenity));
+                          }
+                        }}
                       />
                       <label 
                         htmlFor={amenity} 
