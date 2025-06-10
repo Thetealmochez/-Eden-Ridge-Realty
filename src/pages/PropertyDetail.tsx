@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { PropertyCardProps } from '@/components/PropertyCard';
+import { formatPropertiesData } from '@/services/PropertyDataService';
 import {
   MapPin,
   ArrowLeft,
@@ -50,38 +51,14 @@ const PropertyDetail = () => {
         }
         
         if (data) {
-          // Process images to ensure it's a string array
-          let processedImages: string[] = [];
-          
-          if (data.images && Array.isArray(data.images)) {
-            processedImages = data.images.filter((img): img is string => 
-              typeof img === 'string' && img.trim() !== ''
-            );
-          } else if (typeof data.images === 'string' && data.images.trim() !== '') {
-            processedImages = [data.images];
+          // Use the same formatting logic as PropertyDataService
+          const formattedProperties = formatPropertiesData([data]);
+          if (formattedProperties.length > 0) {
+            setProperty(formattedProperties[0]);
+            
+            // Fetch related properties
+            await fetchRelatedProperties(data.location, data.property_type, data.id);
           }
-          
-          const formattedProperty: PropertyCardProps = {
-            id: data.id,
-            title: data.title || 'Luxury Property',
-            price: data.price ? `KSh ${data.price.toLocaleString()}` : 'Price on Request',
-            numericPrice: data.price || 0,
-            location: data.location || 'Kenya',
-            bedrooms: data.bedrooms || 0,
-            bathrooms: data.bathrooms || 0,
-            area: data.size_sqft || 0,
-            image: processedImages.length > 0 ? processedImages[0] : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
-            images: processedImages,
-            propertyType: data.property_type || 'Residential',
-            description: data.description || 'Luxury property in prime location',
-            yearBuilt: 2023,
-            amenities: ['Swimming Pool', 'Garden', 'Security', 'Parking', 'Gym']
-          };
-          
-          setProperty(formattedProperty);
-          
-          // Fetch related properties
-          await fetchRelatedProperties(data.location, data.property_type, data.id);
         }
       } catch (error) {
         console.error('Error fetching property:', error);
@@ -110,25 +87,8 @@ const PropertyDetail = () => {
       if (error) throw error;
       
       if (data) {
-        const formatted = data.map(prop => ({
-          id: prop.id,
-          title: prop.title || 'Property',
-          price: prop.price ? `KSh ${prop.price.toLocaleString()}` : 'Price on Request',
-          numericPrice: prop.price || 0,
-          location: prop.location || 'Kenya',
-          bedrooms: prop.bedrooms || 0,
-          bathrooms: prop.bathrooms || 0,
-          area: prop.size_sqft || 0,
-          image: Array.isArray(prop.images) && prop.images.length > 0 
-            ? prop.images[0] 
-            : "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
-          images: Array.isArray(prop.images) ? prop.images : [],
-          propertyType: prop.property_type || 'Residential',
-          description: prop.description || 'Luxury property',
-          yearBuilt: 2023,
-          amenities: ['Premium Features']
-        }));
-        
+        // Use the same formatting logic as PropertyDataService to ensure proper types
+        const formatted = formatPropertiesData(data);
         setRelatedProperties(formatted);
       }
     } catch (error) {
