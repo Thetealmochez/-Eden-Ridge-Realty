@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import Navbar from "@/components/Navbar";
@@ -136,5 +137,3 @@ const Properties = () => {
 };
 
 export default Properties;
-
-</initial_code>
