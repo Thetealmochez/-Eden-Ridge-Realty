@@ -1,4 +1,3 @@
-
 import { supabase } from '@/integrations/supabase/client';
 import { PropertyCardProps } from '@/components/PropertyCard';
 
@@ -36,7 +35,7 @@ export const formatPropertiesData = (data: any[]): PropertyCardProps[] => {
 
   return data.map(prop => {
     try {
-      // Safely handle the images property
+      // Safely handle the images property and ensure image is always a string
       let mainImage = "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9"; // default image
       let imageArray: string[] = [mainImage];
       
@@ -67,7 +66,7 @@ export const formatPropertiesData = (data: any[]): PropertyCardProps[] => {
         bedrooms: Number(prop.bedrooms) || 0,
         bathrooms: Number(prop.bathrooms) || 0,
         area: Number(prop.size_sqft) || 0,
-        image: mainImage,
+        image: mainImage, // Ensure this is always a string
         propertyType: prop.property_type || 'Residential',
         description: prop.description || 'Luxury property in prime location',
         yearBuilt: 2023,
@@ -86,7 +85,7 @@ export const formatPropertiesData = (data: any[]): PropertyCardProps[] => {
         bedrooms: 0,
         bathrooms: 0,
         area: 0,
-        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9",
+        image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9", // Ensure fallback is also a string
         propertyType: 'Residential',
         description: 'Property details unavailable',
         yearBuilt: 2023,
