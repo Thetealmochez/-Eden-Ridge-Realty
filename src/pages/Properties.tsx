@@ -136,3 +136,5 @@ const Properties = () => {
 };
 
 export default Properties;
+
+</initial_code>
