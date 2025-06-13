@@ -8,15 +8,13 @@ interface TestimonialCardProps {
   role: string;
   content: string;
   rating: number;
-  image?: string;
 }
 
 const TestimonialCard: React.FC<TestimonialCardProps> = ({
   name,
   role,
   content,
-  rating,
-  image
+  rating
 }) => {
   return (
     <Card className="h-full shadow-lg hover-lift">
@@ -37,19 +35,11 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
         </blockquote>
         
         <div className="flex items-center">
-          {image ? (
-            <img
-              src={image}
-              alt={name}
-              className="h-12 w-12 rounded-full object-cover mr-4"
-            />
-          ) : (
-            <div className="h-12 w-12 rounded-full bg-luxury-navy flex items-center justify-center mr-4">
-              <span className="text-white font-bold text-lg">
-                {name.charAt(0)}
-              </span>
-            </div>
-          )}
+          <div className="h-12 w-12 rounded-full bg-luxury-navy flex items-center justify-center mr-4">
+            <span className="text-white font-bold text-lg">
+              {name.charAt(0)}
+            </span>
+          </div>
           <div>
             <h4 className="font-semibold text-luxury-navy">{name}</h4>
             <p className="text-sm text-luxury-slate">{role}</p>

@@ -8,22 +8,19 @@ const TestimonialsSection = () => {
       name: "Sarah Johnson",
       role: "Property Buyer",
       content: "Eden Ridge Realty helped me find my dream home in Karen. Their professionalism and attention to detail made the entire process seamless.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786"
+      rating: 5
     },
     {
       name: "Michael Ochieng",
       role: "Commercial Investor",
       content: "Exceptional service and market knowledge. They guided me through multiple commercial property investments with great success.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e"
+      rating: 5
     },
     {
       name: "Grace Wanjiku",
       role: "First-time Buyer",
       content: "As a first-time buyer, I was nervous about the process. The team at Eden Ridge made everything clear and stress-free.",
-      rating: 5,
-      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956"
+      rating: 5
     }
   ];
 
