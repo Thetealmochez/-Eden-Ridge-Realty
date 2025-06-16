@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -26,8 +25,8 @@ const About = () => {
                 <h2 className="text-3xl font-semibold text-luxury-navy mb-4">Our Story</h2>
                 <div className="w-20 h-1 bg-luxury-gold mb-6"></div>
                 <p className="text-luxury-slate mb-6">
-                  Evans Kenya Homes was founded in 2015 with a vision to transform the luxury real estate market in Kenya. 
-                  Our founder, Evans Kariuki, noticed a gap in the market for personalized, high-end real estate services 
+                  Eden Ridge Realty was founded in 2015 with a vision to transform the luxury real estate market in Kenya. 
+                  Our founder, Evans Ogega, noticed a gap in the market for personalized, high-end real estate services 
                   that cater to discerning clients looking for exclusive properties in Kenya's most prestigious locations.
                 </p>
                 <p className="text-luxury-slate mb-6">
@@ -62,7 +61,7 @@ const About = () => {
               <h2 className="text-3xl font-semibold text-luxury-navy mb-4">Our Values</h2>
               <div className="w-20 h-1 bg-luxury-gold mx-auto mb-6"></div>
               <p className="text-luxury-slate">
-                At Evans Kenya Homes, these core values guide everything we do and define our approach to real estate.
+                At Eden Ridge Realty, these core values guide everything we do and define our approach to real estate.
               </p>
             </div>
             
@@ -158,12 +157,12 @@ const About = () => {
                 <div className="h-80 overflow-hidden">
                   <img 
                     src="https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2834&q=80" 
-                    alt="Evans Kariuki" 
+                    alt="Evans Ogega" 
                     className="w-full h-full object-cover"
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-luxury-navy mb-1">Evans Kariuki</h3>
+                  <h3 className="text-xl font-semibold text-luxury-navy mb-1">Evans Ogega</h3>
                   <p className="text-luxury-gold mb-4">Founder & CEO</p>
                   <p className="text-luxury-slate mb-4">
                     With over 15 years of experience in luxury real estate, Evans has established himself as a trusted advisor for high-net-worth individuals and international investors.
