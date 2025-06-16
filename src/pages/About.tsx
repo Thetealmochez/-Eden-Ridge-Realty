@@ -157,7 +157,7 @@ const About = () => {
               <div className="bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="h-80 overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2574&q=80" 
+                    src="https://images.unsplash.com/photo-1466442929976-97f336a657be?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2834&q=80" 
                     alt="Evans Kariuki" 
                     className="w-full h-full object-cover"
                   />
@@ -191,7 +191,7 @@ const About = () => {
               <div className="bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="h-80 overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2576&q=80" 
+                    src="https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2671&q=80" 
                     alt="Sarah Njeri" 
                     className="w-full h-full object-cover"
                   />
@@ -225,7 +225,7 @@ const About = () => {
               <div className="bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="h-80 overflow-hidden">
                   <img 
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80" 
+                    src="https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=4221&q=80" 
                     alt="David Omondi" 
                     className="w-full h-full object-cover"
                   />
