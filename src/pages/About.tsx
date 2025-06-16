@@ -25,12 +25,12 @@ const About = () => {
                 <h2 className="text-3xl font-semibold text-luxury-navy mb-4">Our Story</h2>
                 <div className="w-20 h-1 bg-luxury-gold mb-6"></div>
                 <p className="text-luxury-slate mb-6">
-                  Eden Ridge Realty was founded in 2015 with a vision to transform the luxury real estate market in Kenya. 
+                  Eden Ridge Realty was founded in 2025 with a vision to transform the luxury real estate market in Kenya. 
                   Our founder, Evans Ogega, noticed a gap in the market for personalized, high-end real estate services 
                   that cater to discerning clients looking for exclusive properties in Kenya's most prestigious locations.
                 </p>
                 <p className="text-luxury-slate mb-6">
-                  What started as a small boutique agency has grown into one of Kenya's premier luxury real estate firms, 
+                  Since our establishment, we have quickly grown into one of Kenya's premier luxury real estate firms, 
                   with a portfolio of the most exclusive properties across Nairobi, Mombasa, and other prime locations. 
                   Our success is built on our deep understanding of the local market, combined with a commitment to 
                   providing exceptional, personalized service to each client.
