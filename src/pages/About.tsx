@@ -190,11 +190,12 @@ const About = () => {
               <h2 className="text-3xl font-semibold text-luxury-navy mb-4">Meet Our Team</h2>
               <div className="w-20 h-1 bg-luxury-gold mx-auto mb-6"></div>
               <p className="text-luxury-slate">
-                Our team of experienced professionals brings passion, integrity, and unparalleled expertise to every transaction.
+                Led by our founder, our team is dedicated to providing exceptional luxury real estate services with passion, integrity, and unparalleled expertise.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {/* Founder - Evans Ogega */}
               <div className="bg-white rounded-lg overflow-hidden shadow-lg">
                 <div className="h-80 overflow-hidden">
                   <img 
@@ -207,7 +208,7 @@ const About = () => {
                   <h3 className="text-xl font-semibold text-luxury-navy mb-1">Evans Ogega</h3>
                   <p className="text-luxury-gold mb-4">Founder & CEO</p>
                   <p className="text-luxury-slate mb-4">
-                    With over 15 years of experience in luxury real estate, Evans has established himself as a trusted advisor for high-net-worth individuals and international investors.
+                    With over 15 years of experience in luxury real estate, Evans has established himself as a trusted advisor for high-net-worth individuals and international investors seeking premium properties in Kenya.
                   </p>
                   <div className="flex space-x-3">
                     <a href="#" className="text-luxury-navy hover:text-luxury-gold">
@@ -229,73 +230,58 @@ const About = () => {
                 </div>
               </div>
               
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-                <div className="h-80 overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1492321936769-b49830bc1d1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2671&q=80" 
-                    alt="Sarah Njeri" 
-                    className="w-full h-full object-cover"
-                  />
+              {/* Placeholder for future team members */}
+              <div className="bg-gray-50 rounded-lg overflow-hidden shadow-lg border-2 border-dashed border-gray-300">
+                <div className="h-80 flex items-center justify-center bg-gray-100">
+                  <div className="text-center">
+                    <svg className="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    <p className="text-gray-500 font-medium">New Team Member</p>
+                    <p className="text-gray-400 text-sm">Coming Soon</p>
+                  </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-luxury-navy mb-1">Sarah Njeri</h3>
-                  <p className="text-luxury-gold mb-4">Head of Luxury Residential Sales</p>
-                  <p className="text-luxury-slate mb-4">
-                    Sarah specializes in high-end residential properties in Nairobi's most exclusive neighborhoods, with particular expertise in Karen, Runda, and Muthaiga estates.
-                  </p>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded mb-4 w-3/4"></div>
+                  <div className="h-16 bg-gray-200 rounded mb-4"></div>
                   <div className="flex space-x-3">
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22.162 5.656a8.384 8.384 0 01-2.402.658A4.196 4.196 0 0021.6 4c-.82.488-1.719.83-2.656 1.015a4.182 4.182 0 00-7.126 3.814 11.874 11.874 0 01-8.62-4.37 4.168 4.168 0 00-.566 2.103c0 1.45.738 2.731 1.86 3.481a4.168 4.168 0 01-1.894-.523v.052a4.185 4.185 0 003.355 4.101 4.21 4.21 0 01-1.89.072A4.185 4.185 0 007.97 16.65a8.394 8.394 0 01-6.191 1.732 11.83 11.83 0 006.41 1.88c7.693 0 11.9-6.373 11.9-11.9 0-.18-.005-.362-.013-.54a8.496 8.496 0 002.087-2.165z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.78 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                      </svg>
-                    </a>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
                   </div>
                 </div>
               </div>
               
-              <div className="bg-white rounded-lg overflow-hidden shadow-lg">
-                <div className="h-80 overflow-hidden">
-                  <img 
-                    src="https://images.unsplash.com/photo-1466721591366-2d5fba72006d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=4221&q=80" 
-                    alt="David Omondi" 
-                    className="w-full h-full object-cover"
-                  />
+              {/* Another placeholder for future team members */}
+              <div className="bg-gray-50 rounded-lg overflow-hidden shadow-lg border-2 border-dashed border-gray-300">
+                <div className="h-80 flex items-center justify-center bg-gray-100">
+                  <div className="text-center">
+                    <svg className="h-16 w-16 text-gray-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
+                    </svg>
+                    <p className="text-gray-500 font-medium">New Team Member</p>
+                    <p className="text-gray-400 text-sm">Coming Soon</p>
+                  </div>
                 </div>
                 <div className="p-6">
-                  <h3 className="text-xl font-semibold text-luxury-navy mb-1">David Omondi</h3>
-                  <p className="text-luxury-gold mb-4">Commercial Property Specialist</p>
-                  <p className="text-luxury-slate mb-4">
-                    David leads our commercial division, advising clients on high-value office, retail, and mixed-use property investments across Kenya's major business districts.
-                  </p>
+                  <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                  <div className="h-3 bg-gray-200 rounded mb-4 w-3/4"></div>
+                  <div className="h-16 bg-gray-200 rounded mb-4"></div>
                   <div className="flex space-x-3">
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M22.162 5.656a8.384 8.384 0 01-2.402.658A4.196 4.196 0 0021.6 4c-.82.488-1.719.83-2.656 1.015a4.182 4.182 0 00-7.126 3.814 11.874 11.874 0 01-8.62-4.37 4.168 4.168 0 00-.566 2.103c0 1.45.738 2.731 1.86 3.481a4.168 4.168 0 01-1.894-.523v.052a4.185 4.185 0 003.355 4.101 4.21 4.21 0 01-1.89.072A4.185 4.185 0 007.97 16.65a8.394 8.394 0 01-6.191 1.732 11.83 11.83 0 006.41 1.88c7.693 0 11.9-6.373 11.9-11.9 0-.18-.005-.362-.013-.54a8.496 8.496 0 002.087-2.165z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-luxury-navy hover:text-luxury-gold">
-                      <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.78 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
-                      </svg>
-                    </a>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
+                    <div className="h-5 w-5 bg-gray-200 rounded"></div>
                   </div>
                 </div>
               </div>
+            </div>
+            
+            <div className="text-center mt-12">
+              <p className="text-luxury-slate">
+                We're growing our team of exceptional real estate professionals. 
+                <span className="text-luxury-gold font-medium"> Join us</span> in shaping the future of luxury property services in Kenya.
+              </p>
             </div>
           </div>
         </section>
