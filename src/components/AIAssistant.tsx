@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -188,6 +187,19 @@ const AIAssistant = () => {
         timestamp: msg.timestamp.toISOString()
       }));
 
+      // Convert userData to a JSON-serializable format
+      const serializedUserData = {
+        preference: data.preference || null,
+        location: data.location || null,
+        budgetMin: data.budgetMin || null,
+        budgetMax: data.budgetMax || null,
+        bedrooms: data.bedrooms || null,
+        name: data.name || null,
+        phone: data.phone || null,
+        email: data.email || null,
+        timeline: data.timeline || null
+      };
+
       const leadData = {
         name: data.name || '',
         email: data.email || '',
@@ -201,7 +213,7 @@ const AIAssistant = () => {
         source: 'ai_assistant',
         conversation_data: {
           messages: serializedMessages,
-          userData: data
+          userData: serializedUserData
         },
         lead_score: calculateLeadScore(data)
       };
