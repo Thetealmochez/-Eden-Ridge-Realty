@@ -180,6 +180,14 @@ const AIAssistant = () => {
 
   const saveLead = async (data: UserData) => {
     try {
+      // Convert messages to a JSON-serializable format
+      const serializedMessages = messages.map(msg => ({
+        id: msg.id,
+        content: msg.content,
+        isBot: msg.isBot,
+        timestamp: msg.timestamp.toISOString()
+      }));
+
       const leadData = {
         name: data.name || '',
         email: data.email || '',
@@ -191,13 +199,16 @@ const AIAssistant = () => {
         bedrooms_preference: data.bedrooms,
         timeline: data.timeline,
         source: 'ai_assistant',
-        conversation_data: { messages, userData: data },
+        conversation_data: {
+          messages: serializedMessages,
+          userData: data
+        },
         lead_score: calculateLeadScore(data)
       };
 
       const { error } = await supabase
         .from('leads')
-        .insert([leadData]);
+        .insert(leadData);
 
       if (error) {
         console.error('Error saving lead:', error);
