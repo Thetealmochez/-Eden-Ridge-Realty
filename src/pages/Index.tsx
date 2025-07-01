@@ -9,6 +9,7 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AIAssistant from "@/components/AIAssistant";
 import PageMeta from "@/components/PageMeta";
 import NotificationBanner from "@/components/NotificationBanner";
 import SkipToContent from "@/components/SkipToContent";
@@ -45,6 +46,7 @@ const Index = () => {
         </main>
         <Footer />
         <WhatsAppButton />
+        <AIAssistant />
       </div>
     </>
   );

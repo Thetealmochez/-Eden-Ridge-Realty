@@ -7,6 +7,7 @@ import AdvancedPropertyFilters from "@/components/AdvancedPropertyFilters";
 import PropertyResults from "@/components/PropertyResults";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import AIAssistant from "@/components/AIAssistant";
 import PageMeta from "@/components/PageMeta";
 import SkipToContent from "@/components/SkipToContent";
 import BreadcrumbNav from "@/components/BreadcrumbNav";
@@ -132,6 +133,7 @@ const Properties = () => {
       
       <Footer />
       <WhatsAppButton />
+      <AIAssistant />
     </div>
   );
 };

@@ -11,34 +11,61 @@ export type Database = {
     Tables: {
       leads: {
         Row: {
+          bedrooms_preference: number | null
+          budget_max: number | null
+          budget_min: number | null
+          conversation_data: Json | null
           created_at: string | null
           email: string
           id: string
+          lead_score: number | null
+          location_preference: string | null
           message: string | null
           name: string
           phone: string | null
+          preference: string | null
           property_id: string | null
+          source: string | null
           status: string | null
+          timeline: string | null
         }
         Insert: {
+          bedrooms_preference?: number | null
+          budget_max?: number | null
+          budget_min?: number | null
+          conversation_data?: Json | null
           created_at?: string | null
           email: string
           id?: string
+          lead_score?: number | null
+          location_preference?: string | null
           message?: string | null
           name: string
           phone?: string | null
+          preference?: string | null
           property_id?: string | null
+          source?: string | null
           status?: string | null
+          timeline?: string | null
         }
         Update: {
+          bedrooms_preference?: number | null
+          budget_max?: number | null
+          budget_min?: number | null
+          conversation_data?: Json | null
           created_at?: string | null
           email?: string
           id?: string
+          lead_score?: number | null
+          location_preference?: string | null
           message?: string | null
           name?: string
           phone?: string | null
+          preference?: string | null
           property_id?: string | null
+          source?: string | null
           status?: string | null
+          timeline?: string | null
         }
         Relationships: [
           {
