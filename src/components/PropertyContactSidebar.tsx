@@ -41,11 +41,11 @@ const PropertyContactSidebar: React.FC<PropertyContactSidebarProps> = ({
     const message = encodeURIComponent(
       `Hi! I'm interested in the property: ${property.title} (${property.location}). Could you please provide more information?`
     );
-    window.open(`https://wa.me/254700000000?text=${message}`, '_blank');
+    window.open(`https://wa.me/254791942327?text=${message}`, '_blank');
   };
 
   const handleCallClick = () => {
-    window.open('tel:+254700000000');
+    window.open('tel:+254791942327');
   };
 
   const handleEmailClick = () => {
@@ -193,8 +193,8 @@ const PropertyContactSidebar: React.FC<PropertyContactSidebarProps> = ({
           </p>
           <p className="text-luxury-navy">
             <Phone className="h-4 w-4 inline mr-2" />
-            <a href="tel:+254700000000" className="hover:underline">
-              +254 700 000 000
+            <a href="tel:+254791942327" className="hover:underline">
+              +254 791 942 327
             </a>
           </p>
         </div>

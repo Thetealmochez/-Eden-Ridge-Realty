@@ -4,7 +4,7 @@ import { PhoneCall, MessageSquare } from "lucide-react";
 
 const CTASection = () => {
   // Define safe contact methods with properly formatted phone number
-  const phoneNumber = "+254700000000"; // Replace with your actual phone number
+  const phoneNumber = "+254791942327"; // Updated phone number
   const whatsappMessage = "Hello Eden Ridge Realty, I'm interested in learning more about your properties.";
   
   // Format phone number for tel link (remove any spaces)
