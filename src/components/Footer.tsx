@@ -1,6 +1,8 @@
+
 import { PhoneCall, Mail, MapPin, ArrowRight } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -19,15 +21,15 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-start">
                 <PhoneCall className="h-5 w-5 text-luxury-gold mr-3" />
-                <span className="text-white/80">+254 700 123 456</span>
+                <span className="text-white/80">+254 791 942 327</span>
               </div>
               <div className="flex items-start">
                 <Mail className="h-5 w-5 text-luxury-gold mr-3" />
-                <span className="text-white/80">info@edenridgerealty.com</span>
+                <span className="text-white/80">info@evanaproperties.co.ke</span>
               </div>
               <div className="flex items-start">
                 <MapPin className="h-5 w-5 text-luxury-gold mr-3" />
-                <span className="text-white/80">Westlands Business Park, Nairobi</span>
+                <span className="text-white/80">Eden Ridge Towers, 5th Floor, Upperhill, Nairobi</span>
               </div>
             </div>
           </div>
@@ -36,34 +38,34 @@ const Footer = () => {
             <h3 className="text-xl font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
+                <Link to="/" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2" />
                   <span>Home</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#properties" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
+                <Link to="/properties" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2" />
                   <span>Properties</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#locations" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
-                  <ArrowRight className="h-4 w-4 mr-2" />
-                  <span>Locations</span>
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
+                <Link to="/about" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2" />
                   <span>About Us</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#contact" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
+                <Link to="/services" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
+                  <ArrowRight className="h-4 w-4 mr-2" />
+                  <span>Services</span>
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="text-white/70 hover:text-luxury-gold luxury-transition flex items-center">
                   <ArrowRight className="h-4 w-4 mr-2" />
                   <span>Contact</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -147,10 +149,37 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="mt-12 pt-6 border-t border-white/10 text-center">
-          <p className="text-white/60">
-            © {currentYear} Eden Ridge Realty. All rights reserved.
-          </p>
+        <div className="mt-12 pt-6 border-t border-white/10">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-white/60 mb-4 md:mb-0">
+              © {currentYear} Eden Ridge Realty. All rights reserved.
+            </p>
+            <div className="flex space-x-6">
+              <Link 
+                to="/privacy-policy" 
+                className="text-white/60 hover:text-luxury-gold luxury-transition text-sm"
+              >
+                Privacy Policy
+              </Link>
+              <a 
+                href="#" 
+                className="text-white/60 hover:text-luxury-gold luxury-transition text-sm"
+              >
+                Terms of Service
+              </a>
+              <a 
+                href="#cookie-settings" 
+                className="text-white/60 hover:text-luxury-gold luxury-transition text-sm"
+                onClick={(e) => {
+                  e.preventDefault();
+                  // This would trigger cookie settings modal if implemented
+                  console.log("Cookie settings clicked");
+                }}
+              >
+                Cookie Settings
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
