@@ -21,7 +21,6 @@ const FeaturedProperties = () => {
     const fetchProperties = async () => {
       try {
         setLoading(true);
-        console.log('Fetching featured properties...');
         
         const { data, error } = await supabase
           .from('properties')
@@ -30,22 +29,17 @@ const FeaturedProperties = () => {
           .order('created_at', { ascending: false });
         
         if (error) {
-          console.error('Supabase error fetching featured properties:', error);
           throw error;
         }
         
-        console.log('Featured properties data:', data);
-        
         if (data && Array.isArray(data)) {
           const formattedProperties = formatPropertiesData(data);
-          console.log('Formatted featured properties:', formattedProperties);
           setProperties(formattedProperties);
         } else {
-          console.log('No featured properties found');
           setProperties([]);
         }
       } catch (error) {
-        console.error('Error fetching featured properties:', error);
+        // Handle error gracefully without exposing details
         setProperties([]); // Set empty array instead of crashing
         toast({
           title: "Failed to load featured properties",

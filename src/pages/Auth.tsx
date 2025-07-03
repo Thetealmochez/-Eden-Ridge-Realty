@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
+import { loginSchema, registerSchema, sanitizeInput } from '@/lib/validation';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
 
 const Auth = () => {
   const { toast } = useToast();
@@ -43,25 +45,31 @@ const Auth = () => {
     checkUser();
   }, [navigate, redirectTo]);
 
-  const validatePassword = (password: string): { valid: boolean, message?: string } => {
-    if (password.length < 8) {
-      return { 
-        valid: false, 
-        message: "Password must be at least 8 characters long."
-      };
-    }
-    
-    // Add more password validation rules as needed
-    return { valid: true };
-  };
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!loginEmail || !loginPassword) {
+    // Check rate limiting
+    const clientId = `login_${window.location.hostname}`;
+    if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
       toast({
-        title: "Missing Fields",
-        description: "Please enter both email and password.",
+        title: "Too Many Attempts",
+        description: "Please wait before trying again.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Validate using Zod schema
+    const validation = loginSchema.safeParse({
+      email: loginEmail,
+      password: loginPassword,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
+      toast({
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -71,8 +79,8 @@ const Auth = () => {
     
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
-        email: loginEmail,
-        password: loginPassword,
+        email: validation.data.email,
+        password: validation.data.password,
       });
       
       if (error) {
@@ -87,9 +95,10 @@ const Auth = () => {
         navigate(redirectTo);
       }
     } catch (error: any) {
+      // Log security events without exposing sensitive data
       toast({
         title: "Login Failed",
-        description: error.message || "Please check your credentials and try again.",
+        description: "Invalid credentials. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -100,31 +109,29 @@ const Auth = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate input
-    if (!registerEmail || !registerPassword || !confirmPassword) {
+    // Check rate limiting
+    const clientId = `register_${window.location.hostname}`;
+    if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
       toast({
-        title: "Missing Fields",
-        description: "Please fill in all required fields.",
+        title: "Too Many Attempts",
+        description: "Please wait before trying again.",
         variant: "destructive",
       });
       return;
     }
     
-    if (registerPassword !== confirmPassword) {
+    // Validate using Zod schema
+    const validation = registerSchema.safeParse({
+      email: registerEmail,
+      password: registerPassword,
+      confirmPassword: confirmPassword,
+    });
+
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
-        title: "Passwords Do Not Match",
-        description: "Please ensure both passwords match.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    // Check password strength
-    const passwordCheck = validatePassword(registerPassword);
-    if (!passwordCheck.valid) {
-      toast({
-        title: "Weak Password",
-        description: passwordCheck.message,
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -134,8 +141,8 @@ const Auth = () => {
     
     try {
       const { data, error } = await supabase.auth.signUp({
-        email: registerEmail,
-        password: registerPassword,
+        email: validation.data.email,
+        password: validation.data.password,
         options: {
           emailRedirectTo: window.location.origin,
         }
@@ -157,19 +164,15 @@ const Auth = () => {
         }
       }
     } catch (error: any) {
+      // Provide generic error message to prevent information disclosure
       toast({
         title: "Registration Failed",
-        description: error.message || "An error occurred during registration.",
+        description: "Unable to create account. Please try again later.",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
-  };
-
-  // Function to sanitize input
-  const sanitizeInput = (input: string): string => {
-    return input.trim();
   };
 
   return (

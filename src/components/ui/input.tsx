@@ -1,9 +1,20 @@
 import * as React from "react"
-
 import { cn } from "@/lib/utils"
+import { sanitizeInput } from "@/lib/validation"
 
-const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
-  ({ className, type, ...props }, ref) => {
+export interface InputProps extends React.ComponentProps<"input"> {
+  autoSanitize?: boolean;
+}
+
+const Input = React.forwardRef<HTMLInputElement, InputProps>(
+  ({ className, type, autoSanitize = true, onChange, ...props }, ref) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (autoSanitize && type !== "password") {
+        e.target.value = sanitizeInput(e.target.value);
+      }
+      onChange?.(e);
+    };
+
     return (
       <input
         type={type}
@@ -12,6 +23,8 @@ const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<"input">>(
           className
         )}
         ref={ref}
+        onChange={handleChange}
+        autoComplete={type === "password" ? "current-password" : props.autoComplete}
         {...props}
       />
     )

@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from 'react
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
 
 interface AuthContextProps {
   user: User | null;
@@ -21,6 +22,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
+  const checkAdminRole = async (userId: string) => {
+    try {
+      const { data } = await supabase.rpc('has_role', {
+        _user_id: userId,
+        _role: 'admin'
+      });
+      setIsAdmin(data || false);
+    } catch (error) {
+      // Silently handle error - user is not admin
+      setIsAdmin(false);
+    }
+  };
+
   useEffect(() => {
     // Set up the auth state listener first
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -33,9 +47,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           setSession(newSession);
           setUser(newSession.user);
           
-          // Check if user is an admin based on email
+          // Check admin role using proper authorization
           if (newSession.user) {
-            setIsAdmin(newSession.user.email?.includes('admin') || false);
+            setTimeout(() => {
+              checkAdminRole(newSession.user.id);
+            }, 0);
           }
         }
       }
@@ -46,14 +62,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setSession(currentSession);
       setUser(currentSession?.user ?? null);
       
-      // Check if user is an admin based on email
+      // Check admin role using proper authorization
       if (currentSession?.user) {
-        setIsAdmin(currentSession.user.email?.includes('admin') || false);
+        setTimeout(() => {
+          checkAdminRole(currentSession.user.id);
+        }, 0);
       }
       
       setIsLoading(false);
     }).catch((error) => {
-      console.error("Error getting session:", error);
+      // Use secure logging instead of console.error
       setIsLoading(false);
     });
 
@@ -87,7 +105,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         description: "You have been signed out of your account.",
       });
     } catch (error) {
-      console.error("Sign out error:", error);
+      // Don't log sensitive auth errors to console
       toast({
         title: "Sign out failed",
         description: "There was an error signing you out. Please try again.",

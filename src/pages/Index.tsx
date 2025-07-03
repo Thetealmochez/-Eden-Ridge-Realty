@@ -16,7 +16,7 @@ import SkipToContent from "@/components/SkipToContent";
 
 const Index = () => {
   useEffect(() => {
-    console.log("Eden Ridge Realty website loaded successfully");
+    // Remove console logging for production security
   }, []);
 
   return (
