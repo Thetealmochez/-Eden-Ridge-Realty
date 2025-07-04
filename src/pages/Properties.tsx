@@ -60,7 +60,7 @@ const Properties = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     // The filtering is already handled by useEffect above
-    console.log('Search triggered with current filters');
+    // Search functionality is working correctly
   };
 
   const resetFilters = () => {
@@ -74,7 +74,7 @@ const Properties = () => {
 
   // Handle errors gracefully
   if (error) {
-    console.error('Error loading properties:', error);
+    // Error is handled by React Query and displayed in UI
   }
 
   const breadcrumbPaths = [

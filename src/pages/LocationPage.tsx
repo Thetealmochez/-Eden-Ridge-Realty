@@ -65,7 +65,6 @@ const LocationPage = () => {
         setProperties(locationProperties);
         setFilteredProperties(locationProperties);
       } catch (error) {
-        console.error('Error fetching properties:', error);
         toast({
           title: "Failed to load properties",
           description: "Please try again later",

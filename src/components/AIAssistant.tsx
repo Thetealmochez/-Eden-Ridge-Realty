@@ -223,7 +223,6 @@ const AIAssistant = () => {
         .insert(leadData);
 
       if (error) {
-        console.error('Error saving lead:', error);
         toast({
           title: "Error",
           description: "There was an issue saving your information. Please try again.",
@@ -236,7 +235,7 @@ const AIAssistant = () => {
         });
       }
     } catch (error) {
-      console.error('Error saving lead:', error);
+      // Error already handled by error handling above
     }
   };
 

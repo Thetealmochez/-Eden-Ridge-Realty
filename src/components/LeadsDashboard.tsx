@@ -59,7 +59,6 @@ const LeadsDashboard = () => {
       const { data, error } = await query;
 
       if (error) {
-        console.error('Error fetching leads:', error);
         throw error;
       }
 
@@ -83,7 +82,6 @@ const LeadsDashboard = () => {
 
       refetch();
     } catch (error) {
-      console.error('Error updating lead status:', error);
       toast({
         title: "Error",
         description: "Failed to update lead status.",

@@ -45,7 +45,7 @@ const Navbar = () => {
       await signOut();
       // No need to navigate, the auth listener will handle it
     } catch (error) {
-      console.error('Error signing out:', error);
+      // Sign out error handled silently
     }
   };
 

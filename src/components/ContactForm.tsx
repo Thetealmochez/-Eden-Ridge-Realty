@@ -93,7 +93,6 @@ const ContactForm = () => {
         message: ""
       });
     } catch (error) {
-      console.error("Error submitting form:", error);
       toast({
         title: "Submission Failed",
         description: "There was an error submitting your inquiry. Please try again.",

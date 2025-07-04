@@ -9,19 +9,16 @@ export const fetchAllProperties = async () => {
       .order('created_at', { ascending: false });
     
     if (error) {
-      console.error('Supabase error:', error);
       throw error;
     }
     
     // Handle case where data is null or empty
     if (!data || data.length === 0) {
-      console.log('No properties found in database');
       return [];
     }
     
     return formatPropertiesData(data);
   } catch (error) {
-    console.error('Error fetching properties:', error);
     throw error;
   }
 };
@@ -29,7 +26,6 @@ export const fetchAllProperties = async () => {
 export const formatPropertiesData = (data: any[]): PropertyCardProps[] => {
   // Handle empty or null data
   if (!data || !Array.isArray(data)) {
-    console.warn('Invalid data passed to formatPropertiesData:', data);
     return [];
   }
 
@@ -74,7 +70,6 @@ export const formatPropertiesData = (data: any[]): PropertyCardProps[] => {
         images: imageArray
       };
     } catch (error) {
-      console.error('Error formatting property:', prop, error);
       // Return a fallback property object to prevent crashes
       return {
         id: prop.id || 'fallback',

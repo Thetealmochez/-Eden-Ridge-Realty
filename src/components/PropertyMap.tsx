@@ -5,6 +5,7 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin, Eye, EyeOff } from 'lucide-react';
+import { secureStorage } from '@/lib/security';
 
 interface PropertyMapProps {
   location: string;
@@ -110,7 +111,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 
   useEffect(() => {
     // Check if we have a stored token
-    const storedToken = localStorage.getItem('mapbox_token');
+    const storedToken = secureStorage.getItem('mapbox_token');
     if (storedToken) {
       setMapboxToken(storedToken);
       initializeMap(storedToken);
@@ -128,7 +129,7 @@ const PropertyMap: React.FC<PropertyMapProps> = ({
 
   const handleTokenSubmit = () => {
     if (mapboxToken.trim()) {
-      localStorage.setItem('mapbox_token', mapboxToken);
+      secureStorage.setItem('mapbox_token', mapboxToken);
       setShowTokenInput(false);
       initializeMap(mapboxToken);
     }

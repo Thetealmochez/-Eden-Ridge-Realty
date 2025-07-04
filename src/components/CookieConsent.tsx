@@ -2,12 +2,13 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { secureStorage } from "@/lib/security";
 
 const CookieConsent = () => {
   const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("cookie-consent");
+    const consent = secureStorage.getItem("cookie-consent");
     if (!consent) {
       // Only show banner after a short delay to improve UX
       const timer = setTimeout(() => {
@@ -18,12 +19,12 @@ const CookieConsent = () => {
   }, []);
 
   const acceptCookies = () => {
-    localStorage.setItem("cookie-consent", "accepted");
+    secureStorage.setItem("cookie-consent", "accepted");
     setShowBanner(false);
   };
 
   const declineCookies = () => {
-    localStorage.setItem("cookie-consent", "declined");
+    secureStorage.setItem("cookie-consent", "declined");
     setShowBanner(false);
   };
 

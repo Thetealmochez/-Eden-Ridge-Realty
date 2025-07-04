@@ -2,6 +2,7 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { ProductionErrorBoundary, secureErrorReporter } from '@/lib/production-security';
 
 interface Props {
   children: ReactNode;
@@ -22,7 +23,11 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    // Report error securely without exposing sensitive information
+    secureErrorReporter.report(error, {
+      componentStack: ProductionErrorBoundary.sanitizeStack(errorInfo.componentStack),
+      errorBoundary: 'GlobalErrorBoundary'
+    });
   }
 
   private handleRetry = () => {
@@ -40,7 +45,10 @@ class ErrorBoundary extends Component<Props, State> {
                 Something went wrong
               </h1>
               <p className="text-luxury-slate mb-6">
-                We apologize for the inconvenience. Please try refreshing the page.
+                {this.state.error ? 
+                  ProductionErrorBoundary.sanitizeError(this.state.error) : 
+                  'We apologize for the inconvenience. Please try refreshing the page.'
+                }
               </p>
               <div className="space-y-3">
                 <Button 

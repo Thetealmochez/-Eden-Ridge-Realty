@@ -118,7 +118,6 @@ const Partners = () => {
         agreeToTerms: false
       });
     } catch (error) {
-      console.error("Error submitting form:", error);
       toast({
         title: "Submission failed",
         description: "There was an error submitting your request. Please try again.",

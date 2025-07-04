@@ -173,7 +173,7 @@ const Footer = () => {
                 onClick={(e) => {
                   e.preventDefault();
                   // This would trigger cookie settings modal if implemented
-                  console.log("Cookie settings clicked");
+                  // Cookie settings functionality to be implemented
                 }}
               >
                 Cookie Settings

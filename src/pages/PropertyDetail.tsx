@@ -63,7 +63,6 @@ const PropertyDetail = () => {
           }
         }
       } catch (error) {
-        console.error('Error fetching property:', error);
         toast({
           title: "Failed to load property",
           description: "Please try again or contact us for assistance",
@@ -94,7 +93,7 @@ const PropertyDetail = () => {
         setRelatedProperties(formatted);
       }
     } catch (error) {
-      console.error('Error fetching related properties:', error);
+      // Related properties error handled silently
     }
   };
 
@@ -105,7 +104,14 @@ const PropertyDetail = () => {
         text: `Check out this property: ${property?.title}`,
         url: window.location.href,
       })
-      .catch((error) => console.log('Error sharing', error));
+      .catch((error) => {
+        // Handle sharing error silently
+        toast({
+          title: "Sharing failed",
+          description: "Unable to share this property listing",
+          variant: "destructive",
+        });
+      });
     } else {
       navigator.clipboard.writeText(window.location.href);
       toast({

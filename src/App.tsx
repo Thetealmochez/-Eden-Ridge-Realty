@@ -6,9 +6,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import SecurityHeaders from "@/components/SecurityHeaders";
+import SecurityMonitor from "@/components/SecurityMonitor";
+import SecurityAudit from "@/components/SecurityAudit";
 import CookieConsent from "@/components/CookieConsent";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { initializeProductionSecurity } from "@/lib/production-security";
 import Index from "./pages/Index";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -27,8 +31,15 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
+// Initialize production security measures
+if (typeof window !== 'undefined') {
+  initializeProductionSecurity();
+}
+
 const App = () => (
   <ErrorBoundary>
+    <SecurityHeaders />
+    <SecurityMonitor />
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
@@ -61,6 +72,7 @@ const App = () => (
               </Routes>
               <CookieConsent />
               <AccessibilityWidget />
+              <SecurityAudit />
             </BrowserRouter>
           </TooltipProvider>
         </AuthProvider>
