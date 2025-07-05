@@ -72,35 +72,55 @@ class SecureLogger {
   info(message: string, data?: any, userId?: string): void {
     const logEntry = this.createLogEntry('info', message, data, userId);
     
-    if (this.isDevelopment) {
-      console.info(`[${logEntry.timestamp.toISOString()}] INFO: ${message}`, 
-        data ? this.sanitizeData(data) : '');
+    if (this.isDevelopment && typeof console.info === 'function') {
+      try {
+        console.info(`[${logEntry.timestamp.toISOString()}] INFO: ${message}`, 
+          data ? this.sanitizeData(data) : '');
+      } catch {
+        // Console might be disabled in production
+      }
     }
   }
 
   warn(message: string, data?: any, userId?: string): void {
     const logEntry = this.createLogEntry('warn', message, data, userId);
     
-    if (this.isDevelopment) {
-      console.warn(`[${logEntry.timestamp.toISOString()}] WARN: ${message}`, 
-        data ? this.sanitizeData(data) : '');
+    if (this.isDevelopment && typeof console.warn === 'function') {
+      try {
+        console.warn(`[${logEntry.timestamp.toISOString()}] WARN: ${message}`, 
+          data ? this.sanitizeData(data) : '');
+      } catch {
+        // Console might be disabled in production
+      }
     }
   }
 
   error(message: string, error?: Error | any, userId?: string): void {
     const logEntry = this.createLogEntry('error', message, error, userId);
     
-    // Always log errors (but sanitized)
-    console.error(`[${logEntry.timestamp.toISOString()}] ERROR: ${message}`, 
-      error ? this.sanitizeData(error) : '');
+    // Only log errors in development or if console is available
+    if (typeof console.error === 'function') {
+      try {
+        console.error(`[${logEntry.timestamp.toISOString()}] ERROR: ${message}`, 
+          error ? this.sanitizeData(error) : '');
+      } catch {
+        // Console might be disabled in production
+      }
+    }
   }
 
   debug(message: string, data?: any, userId?: string): void {
     if (!this.isDevelopment) return;
     
     const logEntry = this.createLogEntry('debug', message, data, userId);
-    console.debug(`[${logEntry.timestamp.toISOString()}] DEBUG: ${message}`, 
-      data ? this.sanitizeData(data) : '');
+    if (typeof console.debug === 'function') {
+      try {
+        console.debug(`[${logEntry.timestamp.toISOString()}] DEBUG: ${message}`, 
+          data ? this.sanitizeData(data) : '');
+      } catch {
+        // Console might be disabled in production
+      }
+    }
   }
 
   // Security-specific logging
@@ -108,7 +128,13 @@ class SecureLogger {
     const logEntry = this.createLogEntry('warn', `SECURITY: ${event}`, details, userId);
     
     // In production, this would be sent to a security monitoring service
-    console.warn(`[SECURITY] ${event}`, this.sanitizeData(details));
+    if (typeof console.warn === 'function') {
+      try {
+        console.warn(`[SECURITY] ${event}`, this.sanitizeData(details));
+      } catch {
+        // Console might be disabled in production
+      }
+    }
   }
 }
 

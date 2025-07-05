@@ -76,8 +76,8 @@ export const secureStorage = {
       // In production, consider encrypting sensitive data
       localStorage.setItem(key, value);
     } catch (error) {
-      // Handle storage quota exceeded or other errors
-      console.warn('Storage operation failed');
+      // Handle storage quota exceeded or other errors silently
+      // In production, logging is disabled for security
     }
   },
 
