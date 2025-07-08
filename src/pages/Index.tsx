@@ -1,5 +1,5 @@
 
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import FeaturedProperties from "@/components/FeaturedProperties";
@@ -9,10 +9,15 @@ import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import AIAssistant from "@/components/AIAssistant";
 import PageMeta from "@/components/PageMeta";
 import NotificationBanner from "@/components/NotificationBanner";
 import SkipToContent from "@/components/SkipToContent";
+import PropertySearchSection from "@/components/PropertySearchSection";
+import ContactFormSection from "@/components/ContactFormSection";
+import BlogSection from "@/components/BlogSection";
+import GoogleMapSection from "@/components/GoogleMapSection";
+
+const AIAssistant = lazy(() => import('@/components/AIAssistant'));
 
 const Index = () => {
   useEffect(() => {
@@ -36,17 +41,23 @@ const Index = () => {
         />
         
         <Navbar />
-        <main>
+        <main id="main-content">
           <HeroSection />
+          <PropertySearchSection />
           <FeaturedProperties />
           <AboutSection />
           <LocationsSection />
+          <GoogleMapSection />
           <TestimonialsSection />
+          <BlogSection />
           <CTASection />
+          <ContactFormSection />
         </main>
         <Footer />
         <WhatsAppButton />
-        <AIAssistant />
+        <Suspense fallback={<div>Loading assistant...</div>}>
+          <AIAssistant />
+        </Suspense>
       </div>
     </>
   );
