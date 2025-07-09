@@ -16,16 +16,26 @@ import PropertySearchSection from "@/components/PropertySearchSection";
 import ContactFormSection from "@/components/ContactFormSection";
 import BlogSection from "@/components/BlogSection";
 import GoogleMapSection from "@/components/GoogleMapSection";
+import SecurityHeaders from "@/components/SecurityHeaders";
 
 const AIAssistant = lazy(() => import('@/components/AIAssistant'));
 
 const Index = () => {
   useEffect(() => {
-    // Remove console logging for production security
+    // Initialize security monitoring
+    import('@/lib/security-monitor').then(({ securityMonitor }) => {
+      // Log page access
+      securityMonitor.logEvent({
+        type: 'data_access',
+        severity: 'low',
+        details: { page: 'home', action: 'page_view' }
+      });
+    });
   }, []);
 
   return (
     <>
+      <SecurityHeaders />
       <PageMeta 
         title="Eden Ridge Realty | Luxury Real Estate in Kenya - Premium Properties"
         description="Discover luxury residential and commercial properties across Kenya's most prestigious locations. Expert real estate services in Nairobi, Mombasa, Karen, and beyond."

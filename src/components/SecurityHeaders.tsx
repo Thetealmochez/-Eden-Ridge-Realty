@@ -8,9 +8,17 @@ import { SECURITY_CONFIG } from '@/lib/security';
  */
 const SecurityHeaders = () => {
   useEffect(() => {
-    // Apply Content Security Policy
-    const cspValue = Object.entries(SECURITY_CONFIG.CSP)
-      .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
+    // Apply Enhanced Content Security Policy
+    const enhancedCSP = {
+      ...SECURITY_CONFIG.CSP,
+      'upgrade-insecure-requests': [],
+      'block-all-mixed-content': [],
+    };
+    
+    const cspValue = Object.entries(enhancedCSP)
+      .map(([directive, sources]) => 
+        sources.length > 0 ? `${directive} ${sources.join(' ')}` : directive
+      )
       .join('; ');
 
     // Create meta tag for CSP if not already present

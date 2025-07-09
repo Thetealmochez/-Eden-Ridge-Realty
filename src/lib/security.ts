@@ -25,15 +25,17 @@ export const SECURITY_CONFIG = {
     'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   },
 
-  // Rate limiting
+  // Rate limiting - enhanced security
   RATE_LIMITS: {
-    auth: { requests: 5, window: 15 * 60 * 1000 }, // 5 requests per 15 minutes
-    api: { requests: 100, window: 15 * 60 * 1000 }, // 100 requests per 15 minutes
-    contact: { requests: 3, window: 60 * 60 * 1000 }, // 3 requests per hour
+    auth: { requests: 3, window: 15 * 60 * 1000 }, // 3 requests per 15 minutes
+    api: { requests: 60, window: 15 * 60 * 1000 }, // 60 requests per 15 minutes  
+    contact: { requests: 2, window: 60 * 60 * 1000 }, // 2 requests per hour
+    session: { requests: 10, window: 60 * 1000 }, // 10 session checks per minute
+    admin: { requests: 20, window: 60 * 1000 }, // 20 admin actions per minute
   },
 };
 
-// Rate limiting implementation
+// Enhanced rate limiting implementation with security monitoring
 class RateLimiter {
   private attempts: Map<string, { count: number; resetTime: number }> = new Map();
 
@@ -47,11 +49,24 @@ class RateLimiter {
     }
 
     if (attempt.count >= limit.requests) {
+      // Log rate limit exceeded event
+      this.logRateLimitExceeded(key, attempt.count);
       return false;
     }
 
     attempt.count++;
     return true;
+  }
+
+  private logRateLimitExceeded(key: string, attemptCount: number): void {
+    // Import here to avoid circular dependencies
+    import('@/lib/security-monitor').then(({ securityMonitor }) => {
+      securityMonitor.logEvent({
+        type: 'rate_limit_exceeded',
+        severity: attemptCount > 10 ? 'high' : 'medium',
+        details: { key, attemptCount }
+      });
+    });
   }
 
   cleanup(): void {

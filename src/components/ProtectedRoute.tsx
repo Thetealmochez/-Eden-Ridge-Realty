@@ -4,6 +4,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -13,6 +14,7 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps) => {
   const { user, isAdmin, isLoading, session } = useAuth();
   const [isChecking, setIsChecking] = useState(true);
+  const [sessionValid, setSessionValid] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -26,13 +28,40 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     }
   }, [isLoading]);
 
-  // Add an extra validation of the session
+  // Enhanced session validation with rate limiting
   useEffect(() => {
     const validateSession = async () => {
       if (!isLoading && user) {
-        const { data } = await supabase.auth.getSession();
-        if (!data.session) {
-          // Force reload the page to clear auth state
+        // Rate limit session validation attempts
+        const clientId = `session_${user.id}`;
+        if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
+          console.warn('Session validation rate limited');
+          return;
+        }
+
+        try {
+          const { data, error } = await supabase.auth.getSession();
+          
+          if (error || !data.session) {
+            // Invalid session - redirect to auth
+            window.location.href = '/auth';
+            return;
+          }
+
+          // Validate session expiry
+          const now = Math.floor(Date.now() / 1000);
+          if (data.session.expires_at && data.session.expires_at < now) {
+            // Session expired - attempt refresh
+            const { error: refreshError } = await supabase.auth.refreshSession();
+            if (refreshError) {
+              window.location.href = '/auth';
+              return;
+            }
+          }
+
+          setSessionValid(true);
+        } catch (error) {
+          // Session validation failed
           window.location.href = '/auth';
         }
       }
@@ -41,7 +70,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     validateSession();
   }, [isLoading, user]);
 
-  if (isChecking || isLoading) {
+  if (isChecking || isLoading || (user && !sessionValid)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-luxury-navy" />
@@ -49,7 +78,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
     );
   }
 
-  if (!user || !session) {
+  if (!user || !session || !sessionValid) {
     // Redirect to auth page but remember where they were trying to go
     return <Navigate to={`/auth?redirect=${encodeURIComponent(location.pathname)}`} replace />;
   }
