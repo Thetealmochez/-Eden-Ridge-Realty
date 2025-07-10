@@ -1,7 +1,8 @@
 
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import PropertyTypesSection from "@/components/PropertyTypesSection";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import AboutSection from "@/components/AboutSection";
 import LocationsSection from "@/components/LocationsSection";
@@ -21,6 +22,12 @@ import SecurityHeaders from "@/components/SecurityHeaders";
 const AIAssistant = lazy(() => import('@/components/AIAssistant'));
 
 const Index = () => {
+  // State for managing selected property type
+  const [selectedPropertyType, setSelectedPropertyType] = useState<string>('all');
+  
+  // Ref for the featured properties section
+  const featuredPropertiesRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     // Initialize security monitoring
     import('@/lib/security-monitor').then(({ securityMonitor }) => {
@@ -32,6 +39,49 @@ const Index = () => {
       });
     });
   }, []);
+
+  useEffect(() => {
+    // Handle hash-based navigation for SEO and direct linking
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      const hashToTypeMap: { [key: string]: string } = {
+        'luxury-villas': 'Villa',
+        'penthouses': 'Penthouse',
+        'commercial-spaces': 'Commercial',
+        'serviced-apartments': 'Apartment',
+        'premium-land': 'Land'
+      };
+      
+      if (hashToTypeMap[hash]) {
+        setSelectedPropertyType(hashToTypeMap[hash]);
+        // Scroll to featured properties after a short delay to ensure rendering
+        setTimeout(() => {
+          featuredPropertiesRef.current?.scrollIntoView({ 
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }, 100);
+      }
+    };
+
+    // Check hash on component mount
+    handleHashChange();
+    
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange);
+    };
+  }, []);
+
+  /**
+   * Handle property type selection from PropertyTypesSection
+   * @param type - The selected property type
+   */
+  const handlePropertyTypeSelect = (type: string) => {
+    setSelectedPropertyType(type);
+  };
 
   return (
     <>
@@ -54,7 +104,15 @@ const Index = () => {
         <main id="main-content">
           <HeroSection />
           <PropertySearchSection />
-          <FeaturedProperties />
+          <PropertyTypesSection 
+            onTypeSelect={handlePropertyTypeSelect}
+            selectedType={selectedPropertyType}
+          />
+          <FeaturedProperties 
+            ref={featuredPropertiesRef}
+            selectedPropertyType={selectedPropertyType}
+            onTypeSelect={handlePropertyTypeSelect}
+          />
           <AboutSection />
           <LocationsSection />
           <GoogleMapSection />
