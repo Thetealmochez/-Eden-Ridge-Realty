@@ -23,7 +23,7 @@ const AboutSection = () => {
               About Eden Ridge Realty
             </h2>
             <p className="text-luxury-slate mb-6 leading-relaxed">
-              For over a decade, Eden Ridge Realty has been the premier luxury real estate agency serving Kenya's most discerning clients. We specialize in high-end residential homes, luxury estates, commercial properties, and investment opportunities across the country's most prestigious locations.
+              Founded in 2025, Eden Ridge Realty has quickly established itself as the premier luxury real estate agency serving Kenya's most discerning clients. We specialize in high-end residential homes, luxury estates, commercial properties, and investment opportunities across the country's most prestigious locations.
             </p>
             <p className="text-luxury-slate mb-8 leading-relaxed">
               Led by our expert team of licensed real estate professionals with extensive knowledge of Kenya's premium property market, we provide personalized service and expert guidance to ensure you find the perfect property that meets your unique needs and investment goals.
