@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageMeta from "@/components/PageMeta";
 import LeadsDashboard from "@/components/LeadsDashboard";
+import SecurityDashboard from "@/components/SecurityDashboard";
 import { BarChart3, Users, Building, MessageSquare, Shield, AlertTriangle } from 'lucide-react';
 import { securityMonitor } from '@/lib/security-monitor';
 import { dataRetentionManager } from '@/lib/data-retention';
@@ -97,89 +98,7 @@ const Admin = () => {
           </TabsContent>
 
           <TabsContent value="security">
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2">
-                    <Shield className="h-5 w-5" />
-                    <span>Security Dashboard</span>
-                  </CardTitle>
-                  <CardDescription>Monitor security events and system health</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {securityMetrics && (
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                      <div className="bg-red-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-red-600">Auth Failures</p>
-                            <p className="text-2xl font-bold text-red-700">{securityMetrics.authFailures}</p>
-                          </div>
-                          <AlertTriangle className="h-8 w-8 text-red-500" />
-                        </div>
-                      </div>
-                      <div className="bg-yellow-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-yellow-600">Rate Limits</p>
-                            <p className="text-2xl font-bold text-yellow-700">{securityMetrics.rateLimitExceeded}</p>
-                          </div>
-                          <AlertTriangle className="h-8 w-8 text-yellow-500" />
-                        </div>
-                      </div>
-                      <div className="bg-orange-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-orange-600">Suspicious Activity</p>
-                            <p className="text-2xl font-bold text-orange-700">{securityMetrics.suspiciousActivity}</p>
-                          </div>
-                          <AlertTriangle className="h-8 w-8 text-orange-500" />
-                        </div>
-                      </div>
-                      <div className="bg-red-50 p-4 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="text-sm text-red-600">Critical Events</p>
-                            <p className="text-2xl font-bold text-red-700">{securityMetrics.criticalEvents}</p>
-                          </div>
-                          <AlertTriangle className="h-8 w-8 text-red-500" />
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle>Data Retention Status</CardTitle>
-                  <CardDescription>Monitor data retention and cleanup policies</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  {retentionStats.length > 0 ? (
-                    <div className="space-y-4">
-                      {retentionStats.map((stat, index) => (
-                        <div key={index} className="flex justify-between items-center p-3 bg-gray-50 rounded">
-                          <div>
-                            <p className="font-medium">{stat.table}</p>
-                            <p className="text-sm text-gray-600">
-                              {stat.totalRecords} total records, {stat.eligibleForCleanup} eligible for cleanup
-                            </p>
-                          </div>
-                          <div className="text-right">
-                            <p className="text-sm text-gray-500">
-                              Oldest: {stat.oldestRecord ? new Date(stat.oldestRecord).toLocaleDateString() : 'N/A'}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-gray-500">No retention policies configured</p>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
+            <SecurityDashboard />
           </TabsContent>
 
           <TabsContent value="ai-assistant">

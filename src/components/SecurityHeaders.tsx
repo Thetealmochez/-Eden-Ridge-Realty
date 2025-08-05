@@ -8,46 +8,14 @@ import { SECURITY_CONFIG } from '@/lib/security';
  */
 const SecurityHeaders = () => {
   useEffect(() => {
-    // Apply Enhanced Content Security Policy
-    const enhancedCSP = {
-      ...SECURITY_CONFIG.CSP,
-      'upgrade-insecure-requests': [],
-      'block-all-mixed-content': [],
-    };
-    
-    const cspValue = Object.entries(enhancedCSP)
-      .map(([directive, sources]) => 
-        sources.length > 0 ? `${directive} ${sources.join(' ')}` : directive
-      )
-      .join('; ');
-
-    // Create meta tag for CSP if not already present
-    let cspMeta = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
-    if (!cspMeta) {
-      cspMeta = document.createElement('meta');
-      cspMeta.setAttribute('http-equiv', 'Content-Security-Policy');
-      document.head.appendChild(cspMeta);
+    // Check if CSP is already set in index.html (preferred approach)
+    const existingCSP = document.querySelector('meta[http-equiv="Content-Security-Policy"]');
+    if (existingCSP) {
+      // CSP is already set in index.html, skip client-side override
+      console.log('CSP already configured in index.html');
+    } else {
+      console.warn('CSP not found in index.html, this should be configured server-side');
     }
-    cspMeta.setAttribute('content', cspValue);
-
-    // Apply other security headers via meta tags where possible
-    const securityHeaders = [
-      { name: 'X-Content-Type-Options', value: SECURITY_CONFIG.HEADERS['X-Content-Type-Options'] },
-      { name: 'X-Frame-Options', value: SECURITY_CONFIG.HEADERS['X-Frame-Options'] },
-      { name: 'X-XSS-Protection', value: SECURITY_CONFIG.HEADERS['X-XSS-Protection'] },
-      { name: 'Referrer-Policy', value: SECURITY_CONFIG.HEADERS['Referrer-Policy'] },
-      { name: 'Permissions-Policy', value: SECURITY_CONFIG.HEADERS['Permissions-Policy'] },
-    ];
-
-    securityHeaders.forEach(({ name, value }) => {
-      let meta = document.querySelector(`meta[http-equiv="${name}"]`);
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.setAttribute('http-equiv', name);
-        document.head.appendChild(meta);
-      }
-      meta.setAttribute('content', value);
-    });
 
     // Disable right-click context menu in production
     const handleContextMenu = (e: MouseEvent) => {

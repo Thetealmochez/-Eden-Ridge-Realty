@@ -8,6 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 import { PhoneCall, Mail, MapPin, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { formSchemas, rateLimitKeys, getClientIdentifier, sanitization } from '@/lib/input-validation';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
 
 const ContactForm = () => {
   const { toast } = useToast();
@@ -38,22 +40,32 @@ const ContactForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
-    if (!formData.name || !formData.email || !formData.message) {
+    // Enhanced rate limiting check
+    const identifier = rateLimitKeys.contact(getClientIdentifier());
+    const isAllowed = await rateLimiter.isAllowed(identifier, SECURITY_CONFIG.RATE_LIMITS.contact);
+    
+    if (!isAllowed) {
       toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
+        title: "Too Many Requests",
+        description: "Please wait before submitting another form.",
         variant: "destructive",
       });
       return;
     }
+    
+    // Enhanced validation using Zod schema
+    const validation = formSchemas.contact.safeParse({
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone || undefined,
+      message: formData.message,
+    });
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
+    if (!validation.success) {
+      const firstError = validation.error.errors[0];
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Validation Error",
+        description: firstError.message,
         variant: "destructive",
       });
       return;
@@ -62,26 +74,30 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
+      // Sanitize inputs before database insertion
+      const sanitizedData = {
+        name: sanitization.sanitizeUserInput(validation.data.name),
+        email: validation.data.email,
+        phone: validation.data.phone,
+        message: sanitization.sanitizeUserInput(validation.data.message),
+        status: 'new',
+        source: 'contact_form'
+      };
+
       // Insert the lead into the database
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('leads')
-        .insert([
-          { 
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message,
-            status: 'new'
-          }
-        ]);
+        .insert([sanitizedData]);
         
       if (error) {
-        throw error;
+        // Don't expose detailed error information
+        console.error('Contact form submission error:', error);
+        throw new Error('Failed to submit form');
       }
       
       toast({
         title: "Form Submitted",
-        description: "Thank you for your inquiry. Evans will contact you soon!",
+        description: "Thank you for your inquiry. We will contact you soon!",
       });
       
       // Reset form
@@ -95,7 +111,7 @@ const ContactForm = () => {
     } catch (error) {
       toast({
         title: "Submission Failed",
-        description: "There was an error submitting your inquiry. Please try again.",
+        description: "There was an error submitting your inquiry. Please try again later.",
         variant: "destructive",
       });
     } finally {

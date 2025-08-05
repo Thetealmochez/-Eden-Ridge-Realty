@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { Loader2, Eye, EyeOff } from 'lucide-react';
 import { loginSchema, registerSchema, sanitizeInput } from '@/lib/validation';
 import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
+import AdminBootstrap from '@/components/AdminBootstrap';
 
 const Auth = () => {
   const { toast } = useToast();
@@ -354,6 +355,9 @@ const Auth = () => {
             </a>
           </div>
         </div>
+
+        {/* Admin Bootstrap Component */}
+        <AdminBootstrap />
         
         <div className="text-center text-sm text-luxury-slate">
           <p>

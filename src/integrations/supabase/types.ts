@@ -127,6 +127,33 @@ export type Database = {
         }
         Relationships: []
       }
+      rate_limits: {
+        Row: {
+          created_at: string | null
+          id: string
+          identifier: string
+          rate_limit_type: string
+          request_count: number
+          window_start: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          identifier: string
+          rate_limit_type: string
+          request_count?: number
+          window_start?: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          identifier?: string
+          rate_limit_type?: string
+          request_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -153,6 +180,19 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bootstrap_admin: {
+        Args: { _email: string; _bootstrap_key: string }
+        Returns: boolean
+      }
+      check_rate_limit: {
+        Args: {
+          _identifier: string
+          _rate_limit_type: string
+          _max_requests: number
+          _window_minutes: number
+        }
+        Returns: boolean
+      }
       has_role: {
         Args: {
           _user_id: string

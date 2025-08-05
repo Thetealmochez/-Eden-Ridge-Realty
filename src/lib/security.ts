@@ -39,7 +39,25 @@ export const SECURITY_CONFIG = {
 class RateLimiter {
   private attempts: Map<string, { count: number; resetTime: number }> = new Map();
 
-  isAllowed(key: string, limit: { requests: number; window: number }): boolean {
+  async isAllowed(key: string, limit: { requests: number; window: number }): Promise<boolean> {
+    // In production, use server-side rate limiting when possible
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'production') {
+      try {
+        const { supabase } = await import('@/integrations/supabase/client');
+        const { data } = await supabase.rpc('check_rate_limit', {
+          _identifier: key,
+          _rate_limit_type: 'client_request',
+          _max_requests: limit.requests,
+          _window_minutes: Math.floor(limit.window / (60 * 1000))
+        });
+        return data || false;
+      } catch (error) {
+        // Fallback to client-side rate limiting
+        console.warn('Server-side rate limiting failed, using client-side fallback');
+      }
+    }
+
+    // Client-side fallback rate limiting
     const now = Date.now();
     const attempt = this.attempts.get(key);
 
