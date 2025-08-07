@@ -8,6 +8,7 @@ import { HelmetProvider } from "react-helmet-async";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SecurityHeaders from "@/components/SecurityHeaders";
 import SecurityMonitor from "@/components/SecurityMonitor";
+import { SecurityProvider } from "@/components/SecurityProvider";
 
 import CookieConsent from "@/components/CookieConsent";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
@@ -43,7 +44,8 @@ const App = () => (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <TooltipProvider>
+          <SecurityProvider>
+            <TooltipProvider>
             <Toaster />
             <Sonner />
             <BrowserRouter>
@@ -74,7 +76,8 @@ const App = () => (
               <AccessibilityWidget />
               
             </BrowserRouter>
-          </TooltipProvider>
+            </TooltipProvider>
+          </SecurityProvider>
         </AuthProvider>
       </QueryClientProvider>
     </HelmetProvider>
