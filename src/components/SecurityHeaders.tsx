@@ -14,23 +14,35 @@ const SecurityHeaders = () => {
       // CSP is already configured, verify it's secure
       const cspContent = existingCSP.getAttribute('content');
       if (cspContent && !cspContent.includes("'unsafe-eval'")) {
-        console.log('Secure CSP configuration detected');
+        // Use secure logging instead of console
+        import('@/lib/secure-logger').then(({ secureLogger }) => {
+          secureLogger.info('Secure CSP configuration detected', {
+            component: 'SecurityHeaders',
+            cspDirectives: cspContent?.split(';').length || 0,
+          });
+        });
       }
     } else {
-      console.warn('CSP not found in index.html, this should be configured server-side');
+      import('@/lib/secure-logger').then(({ secureLogger }) => {
+        secureLogger.warn('CSP not found in index.html', {
+          component: 'SecurityHeaders',
+          recommendation: 'Configure CSP server-side for better security',
+        });
+      });
     }
 
     // Add security event listeners
     const handleSecurityPolicyViolation = (event: SecurityPolicyViolationEvent) => {
-      // Report CSP violations for monitoring
-      if (process.env.NODE_ENV === 'production') {
-        // In production, you might want to send this to an error reporting service
-        console.error('CSP Violation:', {
+      // Report CSP violations using secure logging
+      import('@/lib/secure-logger').then(({ secureLogger }) => {
+        secureLogger.error('CSP Violation detected', {
+          component: 'SecurityHeaders',
           violatedDirective: event.violatedDirective,
           blockedURI: event.blockedURI,
           documentURI: event.documentURI,
+          timestamp: new Date().toISOString(),
         });
-      }
+      });
     };
 
     document.addEventListener('securitypolicyviolation', handleSecurityPolicyViolation);

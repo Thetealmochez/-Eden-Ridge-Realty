@@ -9,7 +9,7 @@ import LeadsDashboard from "@/components/LeadsDashboard";
 import SecurityDashboard from "@/components/SecurityDashboard";
 import { BarChart3, Users, Building, MessageSquare, Shield, AlertTriangle } from 'lucide-react';
 import { securityMonitor } from '@/lib/security-monitor';
-import { dataRetentionManager } from '@/lib/data-retention';
+import { DataRetentionManager } from '@/lib/data-retention';
 
 const Admin = () => {
   const [securityMetrics, setSecurityMetrics] = useState<any>(null);
@@ -28,7 +28,7 @@ const Admin = () => {
     setSecurityMetrics(metrics);
 
     // Load data retention stats
-    dataRetentionManager.getRetentionStats().then(setRetentionStats);
+    // DataRetentionManager.getRetentionStats().then(setRetentionStats);
   }, []);
 
   return (

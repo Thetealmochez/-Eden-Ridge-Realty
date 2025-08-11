@@ -74,12 +74,24 @@ const ContactForm = () => {
     setIsSubmitting(true);
     
     try {
-      // Sanitize inputs before database insertion
+      // Enhanced PII validation and sanitization
+      const { DataRetentionManager } = await import('@/lib/data-retention');
+      const piiValidation = DataRetentionManager.validatePIIData(validation.data, 'leads');
+      
+      if (!piiValidation.isValid) {
+        toast({
+          title: "Data Validation Error",
+          description: piiValidation.errors[0],
+          variant: "destructive",
+        });
+        return;
+      }
+
       const sanitizedData = {
-        name: sanitization.sanitizeUserInput(validation.data.name),
-        email: validation.data.email,
-        phone: validation.data.phone,
-        message: sanitization.sanitizeUserInput(validation.data.message),
+        name: piiValidation.sanitizedData.name,
+        email: piiValidation.sanitizedData.email,
+        phone: piiValidation.sanitizedData.phone || null,
+        message: piiValidation.sanitizedData.message,
         status: 'new',
         source: 'contact_form'
       };
@@ -87,13 +99,26 @@ const ContactForm = () => {
       // Insert the lead into the database
       const { error } = await supabase
         .from('leads')
-        .insert([sanitizedData]);
+        .insert(sanitizedData);
         
       if (error) {
-        // Don't expose detailed error information
-        console.error('Contact form submission error:', error);
+        // Use secure logging instead of console.error
+        const { secureLogger } = await import('@/lib/secure-logger');
+        const { DataRetentionManager } = await import('@/lib/data-retention');
+        
+        secureLogger.error('Contact form submission failed', {
+          component: 'ContactForm',
+          action: 'handleSubmit',
+          errorCode: error.code,
+          userId: 'anonymous',
+        });
+        
+        await DataRetentionManager.logPIIAccess('leads', 'write', undefined, 'anonymous');
         throw new Error('Failed to submit form');
       }
+      
+      // Log successful PII collection
+      await DataRetentionManager.logPIIAccess('leads', 'write', undefined, 'anonymous');
       
       toast({
         title: "Form Submitted",

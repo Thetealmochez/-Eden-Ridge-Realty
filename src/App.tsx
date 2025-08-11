@@ -13,7 +13,7 @@ import { SecurityProvider } from "@/components/SecurityProvider";
 import CookieConsent from "@/components/CookieConsent";
 import AccessibilityWidget from "@/components/AccessibilityWidget";
 import { AuthProvider } from "@/contexts/AuthContext";
-import { initializeProductionSecurity } from "@/lib/production-security";
+import { productionSecurity } from "@/lib/production-security-enhanced";
 import Index from "./pages/Index";
 import Properties from "./pages/Properties";
 import PropertyDetail from "./pages/PropertyDetail";
@@ -32,9 +32,9 @@ import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
-// Initialize production security measures
+// Initialize enhanced production security measures
 if (typeof window !== 'undefined') {
-  initializeProductionSecurity();
+  productionSecurity.initialize();
 }
 
 const App = () => (
