@@ -6,6 +6,7 @@
 import { secureLogger } from './secure-logger';
 import { DataRetentionManager } from './data-retention';
 import { securityMonitor } from './security-monitor';
+import { supabase } from '@/integrations/supabase/client';
 
 export class ProductionSecurityManager {
   private static isInitialized = false;
@@ -146,26 +147,35 @@ export class ProductionSecurityManager {
   /**
    * Initialize data retention and PII protection
    */
-  private static initializeDataRetention(): void {
-    // Set up periodic data cleanup
-    if (process.env.NODE_ENV === 'production') {
-      setInterval(async () => {
-        try {
-          const result = await DataRetentionManager.anonymizeExpiredData('leads');
-          if (result.anonymizedCount > 0) {
-            secureLogger.info('Expired data anonymized', {
-              component: 'ProductionSecurityManager',
-              anonymizedCount: result.anonymizedCount,
-            });
-          }
-        } catch (error) {
-          secureLogger.error('Failed to anonymize expired data', {
+  private static async initializeDataRetention(): Promise<void> {
+    if (process.env.NODE_ENV !== 'production') return;
+
+    try {
+      // Only schedule anonymization for authenticated admins
+      const { data: isAdmin, error: adminCheckError } = await supabase.rpc('is_admin');
+      if (adminCheckError || !isAdmin) {
+        return;
+      }
+    } catch {
+      return;
+    }
+
+    setInterval(async () => {
+      try {
+        const result = await DataRetentionManager.anonymizeExpiredData('leads');
+        if (result.anonymizedCount > 0) {
+          secureLogger.info('Expired data anonymized', {
             component: 'ProductionSecurityManager',
-            error: error instanceof Error ? error.message : 'Unknown error',
+            anonymizedCount: result.anonymizedCount,
           });
         }
-      }, 24 * 60 * 60 * 1000); // Run daily
-    }
+      } catch (error) {
+        secureLogger.error('Failed to anonymize expired data', {
+          component: 'ProductionSecurityManager',
+          error: error instanceof Error ? error.message : 'Unknown error',
+        });
+      }
+    }, 24 * 60 * 60 * 1000); // Run daily
   }
 
   /**
