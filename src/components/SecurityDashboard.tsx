@@ -59,7 +59,11 @@ const SecurityDashboard = () => {
       setMetrics(clientMetrics);
       setRateLimits(rateLimitData || []);
     } catch (error) {
-      console.error('Failed to load security data:', error);
+      const { secureLogger } = await import('@/lib/secure-logger');
+      secureLogger.error('Failed to load security data', {
+        component: 'SecurityDashboard',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     } finally {
       setIsLoading(false);
     }
@@ -78,7 +82,11 @@ const SecurityDashboard = () => {
         loadSecurityData();
       }
     } catch (error) {
-      console.error('Failed to clear rate limits:', error);
+      const { secureLogger } = await import('@/lib/secure-logger');
+      secureLogger.error('Failed to clear rate limits', {
+        component: 'SecurityDashboard',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   };
 

@@ -51,7 +51,8 @@ const Auth = () => {
     
     // Check rate limiting
     const clientId = `login_${window.location.hostname}`;
-    if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
+    const isAllowed = await rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth);
+    if (!isAllowed) {
       toast({
         title: "Too Many Attempts",
         description: "Please wait before trying again.",
@@ -112,7 +113,8 @@ const Auth = () => {
     
     // Check rate limiting
     const clientId = `register_${window.location.hostname}`;
-    if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
+    const isAllowed = await rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth);
+    if (!isAllowed) {
       toast({
         title: "Too Many Attempts",
         description: "Please wait before trying again.",

@@ -1,6 +1,6 @@
 
 import { ReactNode, useEffect, useState } from 'react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -16,6 +16,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
   const [isChecking, setIsChecking] = useState(true);
   const [sessionValid, setSessionValid] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Wait for auth status to be determined
@@ -34,8 +35,13 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
       if (!isLoading && user) {
         // Rate limit session validation attempts
         const clientId = `session_${user.id}`;
-        if (!rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth)) {
-          console.warn('Session validation rate limited');
+        const isAllowed = await rateLimiter.isAllowed(clientId, SECURITY_CONFIG.RATE_LIMITS.auth);
+        if (!isAllowed) {
+          const { secureLogger } = await import('@/lib/secure-logger');
+          secureLogger.warn('Session validation rate limited', {
+            component: 'ProtectedRoute',
+            userId: user.id
+          });
           return;
         }
 
@@ -44,7 +50,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
           
           if (error || !data.session) {
             // Invalid session - redirect to auth
-            window.location.href = '/auth';
+            navigate('/auth', { replace: true });
             return;
           }
 
@@ -54,7 +60,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
             // Session expired - attempt refresh
             const { error: refreshError } = await supabase.auth.refreshSession();
             if (refreshError) {
-              window.location.href = '/auth';
+              navigate('/auth', { replace: true });
               return;
             }
           }
@@ -62,7 +68,7 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
           setSessionValid(true);
         } catch (error) {
           // Session validation failed
-          window.location.href = '/auth';
+          navigate('/auth', { replace: true });
         }
       }
     };
@@ -90,9 +96,12 @@ const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRouteProps)
         <p className="text-luxury-slate text-center max-w-md">
           You do not have permission to view this page. This area is restricted to administrators only.
         </p>
-        <a href="/" className="mt-6 text-luxury-navy hover:text-luxury-gold">
+        <button 
+          onClick={() => navigate('/')} 
+          className="mt-6 text-luxury-navy hover:text-luxury-gold underline"
+        >
           Return to Home Page
-        </a>
+        </button>
       </div>
     );
   }
