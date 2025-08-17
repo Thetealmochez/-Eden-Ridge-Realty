@@ -13,6 +13,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Building, Users, Handshake, Award, Check } from "lucide-react";
 import { supabase } from '@/integrations/supabase/client';
+import { contactFormSchema } from '@/lib/validation';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
+import { sanitizeInput } from '@/lib/validation';
+import { securityValidation } from '@/lib/security-validation';
 
 const Partners = () => {
   const { toast } = useToast();
@@ -29,9 +33,11 @@ const Partners = () => {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const sanitizedValue = name !== 'message' ? sanitizeInput(value) : value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: sanitizedValue
     });
   };
 
@@ -52,51 +58,92 @@ const Partners = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Simple validation
-    if (!formData.name || !formData.email || !formData.partnerType) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (!formData.agreeToTerms) {
-      toast({
-        title: "Terms & Conditions",
-        description: "Please agree to our terms and conditions to proceed.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsSubmitting(true);
     
     try {
+      // Rate limiting check
+      const clientId = window.navigator.userAgent + window.navigator.language;
+      const isAllowed = await rateLimiter.isAllowed(
+        clientId, 
+        SECURITY_CONFIG.RATE_LIMITS.contact
+      );
+      
+      if (!isAllowed) {
+        toast({
+          title: "Too many requests",
+          description: "Please wait before submitting another request.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.partnerType) {
+        toast({
+          title: "Missing information",
+          description: "Please fill in all required fields.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (!formData.agreeToTerms) {
+        toast({
+          title: "Terms & Conditions",
+          description: "Please agree to our terms and conditions to proceed.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Comprehensive validation using Zod
+      const validationData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || '',
+        message: formData.message || ''
+      };
+
+      const validationResult = contactFormSchema.safeParse(validationData);
+      if (!validationResult.success) {
+        const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
+        toast({
+          title: "Validation Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Additional security validation
+      const nameValidation = securityValidation.validateInput(formData.name, 'string');
+      const emailValidation = securityValidation.validateInput(formData.email, 'string');
+      const phoneValidation = securityValidation.validateInput(formData.phone || '', 'string');
+      const companyValidation = securityValidation.validateInput(formData.companyName || '', 'string');
+      const messageValidation = securityValidation.validateInput(formData.message || '', 'string');
+
+      if (!nameValidation.isValid || !emailValidation.isValid || !phoneValidation.isValid || !companyValidation.isValid || !messageValidation.isValid) {
+        toast({
+          title: "Security Validation Failed",
+          description: "Please check your input for invalid characters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Sanitize all inputs before database insertion
+      const sanitizedData = {
+        name: nameValidation.sanitized,
+        email: emailValidation.sanitized,
+        phone: phoneValidation.sanitized || undefined,
+        message: `Partner request from ${companyValidation.sanitized || 'n/a'} | Type: ${formData.partnerType} | Message: ${messageValidation.sanitized}`,
+        status: 'partner_request'
+      };
+
       // Insert the partner request into the database
       const { data, error } = await supabase
         .from('leads')
-        .insert([
-          { 
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: `Partner request from ${formData.companyName || 'n/a'} | Type: ${formData.partnerType} | Message: ${formData.message}`,
-            status: 'partner_request'
-          }
-        ]);
+        .insert([sanitizedData]);
         
       if (error) {
         throw error;

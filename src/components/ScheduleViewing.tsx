@@ -12,6 +12,10 @@ import { Calendar as CalendarIcon, Loader2 } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/integrations/supabase/client';
+import { contactFormSchema } from '@/lib/validation';
+import { rateLimiter, SECURITY_CONFIG } from '@/lib/security';
+import { sanitizeInput } from '@/lib/validation';
+import { securityValidation } from '@/lib/security-validation';
 
 interface ScheduleViewingProps {
   propertyId?: string;
@@ -33,9 +37,11 @@ const ScheduleViewing = ({ propertyId, propertyTitle, className }: ScheduleViewi
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    const sanitizedValue = name !== 'message' ? sanitizeInput(value) : value;
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [name]: sanitizedValue
     });
   };
 
@@ -57,46 +63,76 @@ const ScheduleViewing = ({ propertyId, propertyTitle, className }: ScheduleViewi
       return;
     }
 
-    // Simple validation
-    if (!formData.name || !formData.email || !formData.phone) {
-      toast({
-        title: "Missing information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Invalid email",
-        description: "Please enter a valid email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     setIsSubmitting(true);
     
     try {
+      // Rate limiting check
+      const clientId = window.navigator.userAgent + window.navigator.language;
+      const isAllowed = await rateLimiter.isAllowed(
+        clientId, 
+        SECURITY_CONFIG.RATE_LIMITS.contact
+      );
+      
+      if (!isAllowed) {
+        toast({
+          title: "Too many requests",
+          description: "Please wait before submitting another request.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Comprehensive validation using Zod
+      const validationData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message
+      };
+
+      const validationResult = contactFormSchema.safeParse(validationData);
+      if (!validationResult.success) {
+        const errorMessage = validationResult.error.errors[0]?.message || "Please check your input";
+        toast({
+          title: "Validation Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Additional security validation
+      const nameValidation = securityValidation.validateInput(formData.name, 'string');
+      const emailValidation = securityValidation.validateInput(formData.email, 'string');
+      const phoneValidation = securityValidation.validateInput(formData.phone, 'string');
+      const messageValidation = securityValidation.validateInput(formData.message || '', 'string');
+
+      if (!nameValidation.isValid || !emailValidation.isValid || !phoneValidation.isValid || !messageValidation.isValid) {
+        toast({
+          title: "Security Validation Failed",
+          description: "Please check your input for invalid characters.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       // Format the date
       const formattedDate = format(date, 'yyyy-MM-dd');
       
+      // Sanitize all inputs before database insertion
+      const sanitizedData = {
+        name: nameValidation.sanitized,
+        email: emailValidation.sanitized,
+        phone: phoneValidation.sanitized,
+        message: `Viewing request for ${propertyTitle || 'property'} on ${formattedDate} at ${formData.preferredTime}. ${messageValidation.sanitized}`,
+        property_id: propertyId,
+        status: 'new'
+      };
+
       // Insert the viewing request into the database
       const { data, error } = await supabase
         .from('leads')
-        .insert([
-          { 
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: `Viewing request for ${propertyTitle || 'property'} on ${formattedDate} at ${formData.preferredTime}. ${formData.message}`,
-            property_id: propertyId,
-            status: 'new'
-          }
-        ]);
+        .insert([sanitizedData]);
         
       if (error) {
         throw error;
