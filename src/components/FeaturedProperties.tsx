@@ -1,8 +1,8 @@
 import { useState, useEffect, forwardRef } from 'react';
 import PropertyCard, { PropertyCardProps } from './PropertyCard';
+import SkeletonCard from './SkeletonCard';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
-import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -188,13 +188,21 @@ const FeaturedProperties = forwardRef<HTMLElement, FeaturedPropertiesProps>(
           {/* Property Grid */}
           <div className="mt-8">
             {loading ? (
-              <div className="flex justify-center items-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-luxury-navy" />
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {Array.from({ length: 6 }).map((_, index) => (
+                  <SkeletonCard key={index} className="animate-shimmer bg-gradient-to-r from-gray-200 via-gray-100 to-gray-200 bg-[length:200%_100%]" />
+                ))}
               </div>
             ) : filteredProperties.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {filteredProperties.map((property) => (
-                  <PropertyCard key={property.id} {...property} />
+                {filteredProperties.map((property, index) => (
+                  <div 
+                    key={property.id} 
+                    className="animate-fade-in-up"
+                    style={{ animationDelay: `${index * 100}ms` }}
+                  >
+                    <PropertyCard {...property} />
+                  </div>
                 ))}
               </div>
             ) : (

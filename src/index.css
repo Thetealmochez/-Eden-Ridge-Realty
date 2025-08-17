@@ -89,6 +89,28 @@
 
   html {
     @apply scroll-smooth; /* Enable smooth scrolling */
+    /* Enhanced scrolling performance */
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.luxury.gold') transparent;
+  }
+
+  /* Webkit scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.luxury.gold');
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.luxury.gold/0.8');
   }
 
   body {

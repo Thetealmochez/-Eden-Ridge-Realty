@@ -5,20 +5,22 @@ import HeroSection from "@/components/HeroSection";
 import PropertyTypesSection from "@/components/PropertyTypesSection";
 import FeaturedProperties from "@/components/FeaturedProperties";
 import AboutSection from "@/components/AboutSection";
-import LocationsSection from "@/components/LocationsSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import CTASection from "@/components/CTASection";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/WhatsAppButton";
 import PageMeta from "@/components/PageMeta";
 import NotificationBanner from "@/components/NotificationBanner";
 import SkipToContent from "@/components/SkipToContent";
 import PropertySearchSection from "@/components/PropertySearchSection";
-import ContactFormSection from "@/components/ContactFormSection";
-import BlogSection from "@/components/BlogSection";
-import GoogleMapSection from "@/components/GoogleMapSection";
 import SecurityHeaders from "@/components/SecurityHeaders";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
+// Lazy load heavy components for better performance
+const LocationsSection = lazy(() => import('@/components/LocationsSection'));
+const TestimonialsSection = lazy(() => import('@/components/TestimonialsSection'));
+const CTASection = lazy(() => import('@/components/CTASection'));
+const ContactFormSection = lazy(() => import('@/components/ContactFormSection'));
+const BlogSection = lazy(() => import('@/components/BlogSection'));
+const GoogleMapSection = lazy(() => import('@/components/GoogleMapSection'));
+const Footer = lazy(() => import('@/components/Footer'));
+const WhatsAppButton = lazy(() => import('@/components/WhatsAppButton'));
 const AIAssistant = lazy(() => import('@/components/AIAssistant'));
 
 const Index = () => {
@@ -114,16 +116,42 @@ const Index = () => {
             onTypeSelect={handlePropertyTypeSelect}
           />
           <AboutSection />
-          <LocationsSection />
-          <GoogleMapSection />
-          <TestimonialsSection />
-          <BlogSection />
-          <CTASection />
-          <ContactFormSection />
+          
+          {/* Lazy loaded sections with smooth loading */}
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading locations..." />}>
+            <LocationsSection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading map..." />}>
+            <GoogleMapSection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading testimonials..." />}>
+            <TestimonialsSection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading blog..." />}>
+            <BlogSection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading..." />}>
+            <CTASection />
+          </Suspense>
+          
+          <Suspense fallback={<LoadingSpinner size="lg" text="Loading contact form..." />}>
+            <ContactFormSection />
+          </Suspense>
         </main>
-        <Footer />
-        <WhatsAppButton />
-        <Suspense fallback={<div>Loading assistant...</div>}>
+        
+        <Suspense fallback={<div className="h-20 bg-luxury-navy animate-pulse" />}>
+          <Footer />
+        </Suspense>
+        
+        <Suspense fallback={null}>
+          <WhatsAppButton />
+        </Suspense>
+        
+        <Suspense fallback={null}>
           <AIAssistant />
         </Suspense>
       </div>
